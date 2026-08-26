@@ -1,0 +1,73 @@
+[project]
+name = "astris-python"
+version = "0.1.0"
+description = "An opinionated, battery-included web framework powered by the best (FastAPI + Vue + SQLModel + Inertia.js + Uvicorn + Pydantic, etc...) libraries."
+readme = "README.md"
+authors = [
+    { name = "Felix Gomez", email = "felix@felixgomez.com" }
+]
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: AsyncIO",
+    "Framework :: FastAPI",
+    "Framework :: Pydantic",
+    "Framework :: Pydantic :: 2",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = [
+    "alembic>=1.19.1",
+    "fastapi>=0.141.1",
+    "itsdangerous>=2.2.0",
+    "pwdlib[argon2]>=0.3.1",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.15.0",
+    "sqlmodel>=0.0.39",
+    "typer>=0.27.1",
+    "uvicorn[standard]>=0.52.4",
+]
+
+[project.scripts]
+astris = "astris.installer:installer_cli"
+astris-python = "astris.installer:installer_cli"
+orbit = "astris.cli:orbit_cli"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "astris"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.16.4",
+    "ty>=0.0.74",
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true

@@ -1,0 +1,31 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+.venv/
+
+# IDE & Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# AI
+.agents/
+.agy/
+.claude/
+
+# Environment
+.env
