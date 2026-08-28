@@ -1,6 +1,19 @@
-# Astris
+<p align="center">
+  <a href="https://github.com/TheFelixGomez/astris">
+    <img src="https://raw.githubusercontent.com/TheFelixGomez/astris/main/.github/assets/astris-logo-name.png" alt="Astris" width="717">
+  </a>
+</p>
 
-An opinionated, batteries-included web framework powered by FastAPI, Inertia.js, and SQLModel.
+<p align="center">
+  <strong>The modern full-stack web framework for Python.</strong><br>
+  Full-stack simplicity with modern Python performance.
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/astris-python/"><img src="https://img.shields.io/pypi/v/astris-python.svg" alt="PyPI version"></a>
+  <a href="https://pypi.org/project/astris-python/"><img src="https://img.shields.io/pypi/pyversions/astris-python.svg" alt="Python Versions"></a>
+  <a href="https://github.com/TheFelixGomez/astris/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+</p>
 
 > [!WARNING]
 > **Early Alpha**: Astris is currently in active alpha development. APIs and features may undergo breaking changes prior to the 1.0 stable release. Feedback, bug reports, and ideas are welcome!
