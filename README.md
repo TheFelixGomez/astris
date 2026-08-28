@@ -1,6 +1,6 @@
-<p align="center">
+<p align="center" style="padding: 20px 0 10px 0;">
   <a href="https://github.com/TheFelixGomez/astris">
-    <img src="https://raw.githubusercontent.com/TheFelixGomez/astris/main/.github/assets/astris-logo-name.png" alt="Astris" width="717">
+    <img src="https://raw.githubusercontent.com/TheFelixGomez/astris/main/.github/assets/astris-logo-name.png" alt="Astris" width="380">
   </a>
 </p>
 
