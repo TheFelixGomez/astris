@@ -16,6 +16,7 @@ from starlette.staticfiles import StaticFiles
 
 from astris.config import Settings, settings
 from astris.database import db
+from astris.http.static import PublicStaticMiddleware
 from astris.inertia import share
 from astris.inertia.exceptions import (
     inertia_http_exception_handler,
@@ -154,7 +155,12 @@ class Astris:
                 same_site=self.session_same_site,
             )
 
-        # 4. CORS configuration (outermost to handle preflight)
+        # 4. Public static assets (serves /favicon.ico, /robots.txt, and public/ files directly)
+        public_dir = self.base_path / "public"
+        if public_dir.exists():
+            self.app.add_middleware(PublicStaticMiddleware, public_dir=public_dir)
+
+        # 5. CORS configuration (outermost to handle preflight)
         self.app.add_middleware(
             CORSMiddleware,
             allow_origins=list(self.cors_origins),
