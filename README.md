@@ -15,8 +15,7 @@
   <a href="https://github.com/TheFelixGomez/astris/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
 </p>
 
-> [!WARNING]
-> **Early Alpha**: Astris is currently in active alpha development. APIs and features may undergo breaking changes prior to the 1.0 stable release. Feedback, bug reports, and ideas are welcome!
+> ⚠️ **Early Alpha**: Astris is currently in active alpha development. APIs and features may undergo breaking changes until production-ready status is confirmed. Feedback, bug reports, and ideas are welcome!
 
 ---
 
