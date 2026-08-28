@@ -28,8 +28,20 @@ class Settings(BaseSettings):
     # Sessions & Security
     session_cookie_name: str = "astris_session"
     session_max_age: int | None = 14 * 24 * 60 * 60  # 14 days
-    session_https_only: bool = False
+    session_https_only: bool | None = None
     session_same_site: Literal["lax", "strict", "none"] = "lax"
+
+    @property
+    def is_production(self) -> bool:
+        """Return True if running in production mode."""
+        return self.app_env.lower() in ("production", "prod")
+
+    @property
+    def resolved_session_https_only(self) -> bool:
+        """Auto-enable HTTPS-only cookies in production unless explicitly overridden."""
+        if self.session_https_only is not None:
+            return self.session_https_only
+        return self.is_production
 
     # CORS & CSRF
     cors_origins: list[str] = [
