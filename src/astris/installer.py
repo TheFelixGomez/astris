@@ -142,9 +142,73 @@ requires-python = ">=3.11"
 dependencies = []
 '''
     (project_dir / "pyproject.toml").write_text(pyproject_content, encoding="utf-8")
-    (project_dir / "README.md").write_text(
-        f"# {name}\n\nBuilt with Astris + Inertia + Vue 3.", encoding="utf-8"
-    )
+    project_readme = f"""<p align="center">
+  <a href="https://github.com/TheFelixGomez/astris">
+    <img src="https://raw.githubusercontent.com/TheFelixGomez/astris/main/.github/assets/astris-logo-name.png" alt="Astris" width="512">
+  </a>
+</p>
+
+<p align="center">
+  <strong>The modern full-stack web framework for Python.</strong><br>
+  Full-stack simplicity with modern Python performance.
+</p>
+
+---
+
+# {name}
+
+An application built with **Astris**.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install Frontend Dependencies
+```bash
+npm install
+```
+
+### 2. Start Development Server
+Launch the full-stack development server:
+```bash
+uv run orbit serve
+```
+Open **`http://localhost:8000`** in your browser.
+
+---
+
+## 🪐 Orbit CLI Commands
+
+| Command | Description |
+| :--- | :--- |
+| `uv run orbit serve` | Start full-stack development server with hot-reloading |
+| `uv run orbit make:module <name>` | Scaffold a complete domain module (Controller, Model, View) |
+| `uv run orbit make:controller <name>` | Generate an Astris controller |
+| `uv run orbit make:model <name>` | Generate a database model |
+| `uv run orbit migrate` | Run all pending database migrations |
+| `uv run orbit make:migration "<message>"` | Auto-generate a new database schema migration |
+| `uv run orbit key:generate` | Generate a new 32-byte secret `APP_KEY` in `.env` |
+
+---
+
+## 💡 Project Architecture
+
+* **`app/modules/`**: Domain modules with controllers, models, and routes.
+* **`app/core/config.py`**: Centralized application configuration.
+* **`resources/js/Pages/`**: Frontend single-page application views.
+* **`database/migrations/`**: Database schema migrations managed by Orbit.
+* **`public/`**: Web root directory for static assets (favicon, images, robots.txt).
+
+---
+
+## 📖 About Astris
+
+**Astris** is a modern full-stack web framework for Python with expressive, type-safe elegance. Designed to help developers build and ship modern web applications with speed and simplicity.
+
+* **Repository**: [https://github.com/TheFelixGomez/astris](https://github.com/TheFelixGomez/astris)
+* **Author**: Felix Gomez ([@TheFelixGomez](https://github.com/TheFelixGomez))
+"""
+    (project_dir / "README.md").write_text(project_readme, encoding="utf-8")
     (project_dir / ".gitignore").write_text(
         ".venv/\nnode_modules/\n__pycache__/\n*.pyc\n.env\npublic/build/\n",
         encoding="utf-8",
