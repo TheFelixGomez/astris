@@ -79,7 +79,7 @@ class Astris:
         self.session_https_only = (
             session_https_only
             if session_https_only is not None
-            else self.config.session_https_only
+            else self.config.resolved_session_https_only
         )
         self.session_same_site = (
             session_same_site or self.config.session_same_site  # type: ignore[assignment]
