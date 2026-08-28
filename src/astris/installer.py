@@ -79,6 +79,19 @@ def new(
     (modules_dir / "__init__.py").touch()
     (welcome_module_dir / "__init__.py").touch()
 
+    # Default framework favicon
+    try:
+        import importlib.resources as pkg_resources
+
+        favicon_bytes = (
+            pkg_resources.files("astris.assets").joinpath("favicon.ico").read_bytes()
+        )
+        (public_dir / "favicon.ico").write_bytes(favicon_bytes)
+    except (ImportError, OSError, TypeError):
+        local_favicon = Path(__file__).parent / "assets" / "favicon.ico"
+        if local_favicon.exists():
+            (public_dir / "favicon.ico").write_bytes(local_favicon.read_bytes())
+
     from astris.database.migrations import ensure_migration_setup
 
     ensure_migration_setup(project_dir)
@@ -259,6 +272,7 @@ export default defineConfig({
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <title>Astris Application</title>
 </head>
 <body class="bg-slate-950 text-slate-100 antialiased font-sans">
