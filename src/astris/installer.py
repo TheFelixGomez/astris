@@ -59,6 +59,7 @@ def new(
     css_dir = project_dir / "resources" / "css"
     js_dir = project_dir / "resources" / "js"
     pages_dir = js_dir / "Pages"
+    components_dir = js_dir / "Components"
 
     for directory in [
         core_dir,
@@ -70,6 +71,7 @@ def new(
         css_dir,
         js_dir,
         pages_dir,
+        components_dir,
     ]:
         directory.mkdir(parents=True, exist_ok=True)
 
@@ -380,9 +382,32 @@ createInertiaApp({
 """
     (js_dir / "app.ts").write_text(app_ts_content, encoding="utf-8")
 
-    # 10. Frontend: resources/js/Pages/Welcome.vue
+    # 10. Frontend: resources/js/Components/AstrisLogo.vue
+    astris_logo_vue_content = """<template>
+  <svg
+    viewBox="0 0 792 792"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="m50 757h88.8l37.8-92.3c-31.4-1.6-59-6.3-82.4-14.2z"/>
+    <path d="m596.3 550.8q-11 6.5-22.3 12.6l79.1 193.6h88.9l-98.1-236.5q-22.4 15.6-47.6 30.3z"/>
+    <path d="m210.1 582.6l185.9-454.7 147.5 360.9c25-14.4 48-29.9 68.2-46l-169.2-407.8h-93l-221.6 534.1c21.2 8.3 49.5 12.9 82.2 13.5z"/>
+    <path fill-rule="evenodd" d="m372.5 466.8l23.5 76.4 23.5-76.4 69-23.5-68.8-23.8-23.7-75.8-23.7 75.8-68.8 23.8 69 23.5z"/>
+    <path d="m756.2 309.9c-18.3-50.9-96.5-72.1-201.4-61.6 81.6-3.1 141.7 15.8 156.8 58 26.6 74.2-96.3 192.3-273.9 256.1-177.7 63.7-343.3 55.2-370-19-15.5-43.4 19.7-99.6 87.1-151.5-90.4 60.9-137.6 131.1-118.9 183.2 29.4 82 214.3 90.6 413.1 19.3 198.8-71.3 336.6-202.5 307.2-284.5z"/>
+    <path d="m90 533.2c2.1 6 5.3 11.5 9.4 16.6q-2.3-3.9-3.9-8.2c-12.7-35.5 18.2-82.5 77.1-127.1l12.8-31c-71.7 50.7-110.7 107.1-95.4 149.7z"/>
+    <path d="m437 275.7c-30 6.8-61.1 15.9-92.6 27.2q-0.3 0.1-0.6 0.2l-10.1 24.7q8.5-3.3 17.3-6.4c31.8-11.4 63.2-20.7 93.3-27.8l-7.4-17.9z"/>
+    <path d="m688.7 323.7q1.4 4.1 2.1 8.4c0-6.6-1.1-12.9-3.2-18.9-13.1-36.3-63.2-53.7-132.2-52.9l7 16.8c66.6-1.8 114.4 13.4 126.3 46.6z"/>
+  </svg>
+</template>
+"""
+    (components_dir / "AstrisLogo.vue").write_text(
+        astris_logo_vue_content, encoding="utf-8"
+    )
+
+    # 11. Frontend: resources/js/Pages/Welcome.vue
     welcome_vue_content = """<script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
+import AstrisLogo from '../Components/AstrisLogo.vue';
 
 interface Props {
   status: string;
@@ -397,69 +422,91 @@ withDefaults(defineProps<Props>(), {
   version: "0.1.0",
   api_docs_url: "/docs",
   redoc_url: "/redoc",
-  docs_url: "https://astris.dev/docs",
+  docs_url: "https://github.com/TheFelixGomez/astris",
 });
 
 const page = usePage();
 </script>
 
 <template>
-  <main style="min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; background: #090d16; color: #f8fafc; padding: 1.5rem; font-family: system-ui, -apple-system, sans-serif;">
-    <!-- Top Auth Navigation -->
-    <header style="display: flex; justify-content: flex-end; gap: 1rem; max-width: 64rem; width: 100%; margin: 0 auto;">
-      <template v-if="page.props.auth?.user">
-        <Link
-          href="/dashboard"
-          style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.2); text-decoration: none; transition: all 0.2s;"
-        >
-          Dashboard &rarr;
-        </Link>
-      </template>
-      <template v-else>
-        <Link
-          href="/login"
-          style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: #94a3b8; text-decoration: none; transition: color 0.2s;"
-        >
-          Sign In
-        </Link>
-        <Link
-          href="/register"
-          style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: #ffffff; background: #2563eb; text-decoration: none; transition: background 0.2s;"
-        >
-          Register
-        </Link>
-      </template>
+  <main class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 p-6 font-sans relative overflow-hidden selection:bg-sky-500 selection:text-white">
+    <!-- Subtle Background Ambient Glow -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-sky-500/10 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+
+    <!-- Top Navigation -->
+    <header class="flex justify-between items-center max-w-5xl w-full mx-auto py-2">
+      <div class="flex items-center gap-2.5">
+        <AstrisLogo class="w-8 h-8 text-sky-400" />
+        <span class="font-bold text-lg tracking-tight text-white">Astris</span>
+      </div>
+
+      <nav class="flex items-center gap-3">
+        <template v-if="page.props.auth?.user">
+          <Link
+            href="/dashboard"
+            class="px-4 py-2 rounded-xl text-sm font-medium text-sky-400 bg-sky-500/10 border border-sky-500/20 hover:bg-sky-500/20 hover:border-sky-500/40 transition duration-200"
+          >
+            Dashboard &rarr;
+          </Link>
+        </template>
+        <template v-else>
+          <Link
+            href="/login"
+            class="px-3.5 py-1.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white transition duration-200"
+          >
+            Sign In
+          </Link>
+          <Link
+            href="/register"
+            class="px-4 py-1.5 rounded-xl text-sm font-medium text-white bg-sky-500 hover:bg-sky-400 shadow-md shadow-sky-500/20 transition duration-200"
+          >
+            Register
+          </Link>
+        </template>
+      </nav>
     </header>
 
-    <div style="max-width: 48rem; width: 100%; margin: 2rem auto; text-align: center;">
-      <!-- Hero Header -->
-      <div style="margin-bottom: 2.5rem;">
-        <h1 style="font-size: 3rem; font-weight: 800; letter-spacing: -0.025em; margin: 0 0 0.5rem 0; background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+    <!-- Main Hero Content -->
+    <div class="max-w-3xl w-full my-auto mx-auto text-center py-10">
+      <!-- Hero Logo & Title -->
+      <div class="mb-10 flex flex-col items-center">
+        <div class="relative mb-6 group">
+          <div class="absolute -inset-2 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-3xl blur-lg opacity-30 group-hover:opacity-60 transition duration-500"></div>
+          <div class="relative p-4 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur shadow-2xl">
+            <AstrisLogo class="w-16 h-16 text-sky-400" />
+          </div>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-3">
           Astris
         </h1>
-        <p style="font-size: 1.125rem; color: #94a3b8; margin: 0 0 1.25rem 0;">
+        <p class="text-lg sm:text-xl text-slate-400 max-w-xl mx-auto leading-relaxed mb-5">
           {{ message }}
         </p>
-        <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.85rem; border-radius: 9999px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 0.8125rem; font-family: monospace;">
-          <span style="width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: #22c55e; box-shadow: 0 0 8px #22c55e;"></span>
-          Status: {{ status }} &bull; v{{ version }}
+
+        <!-- Version & Status Badge -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-xs font-mono text-slate-300 shadow-sm backdrop-blur">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse"></span>
+          <span>Status: <span class="text-emerald-400 font-semibold">{{ status }}</span></span>
+          <span class="text-slate-600">&bull;</span>
+          <span class="text-sky-400">v{{ version }}</span>
         </div>
       </div>
 
       <!-- Quick Navigation Cards -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; text-align: left; margin-bottom: 2.5rem;">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left mb-10">
         <!-- Interactive API Docs -->
         <a
           :href="api_docs_url"
           target="_blank"
           rel="noopener noreferrer"
-          style="display: block; padding: 1.25rem; border-radius: 0.75rem; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.1); color: inherit; text-decoration: none; transition: border-color 0.2s, transform 0.2s;"
-          onmouseover="this.style.borderColor='rgba(56,189,248,0.4)'; this.style.transform='translateY(-2px)';"
-          onmouseout="this.style.borderColor='rgba(148,163,184,0.1)'; this.style.transform='none';"
+          class="group p-5 rounded-2xl bg-slate-900/60 hover:bg-slate-900/90 border border-slate-800 hover:border-sky-500/40 backdrop-blur shadow-lg transition-all duration-200 hover:-translate-y-1"
         >
-          <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">⚡</div>
-          <h3 style="font-size: 1rem; font-weight: 600; margin: 0 0 0.25rem 0; color: #f1f5f9;">Swagger API Docs</h3>
-          <p style="font-size: 0.8125rem; color: #94a3b8; margin: 0;">Interactive OpenAPI interface to explore and test endpoints.</p>
+          <div class="w-9 h-9 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 text-lg mb-3.5 group-hover:scale-110 transition duration-200">
+            ⚡
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1 group-hover:text-sky-400 transition">Swagger API Docs</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Interactive OpenAPI interface to explore and test endpoints.</p>
         </a>
 
         <!-- ReDoc API Docs -->
@@ -467,13 +514,13 @@ const page = usePage();
           :href="redoc_url"
           target="_blank"
           rel="noopener noreferrer"
-          style="display: block; padding: 1.25rem; border-radius: 0.75rem; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.1); color: inherit; text-decoration: none; transition: border-color 0.2s, transform 0.2s;"
-          onmouseover="this.style.borderColor='rgba(129,140,248,0.4)'; this.style.transform='translateY(-2px)';"
-          onmouseout="this.style.borderColor='rgba(148,163,184,0.1)'; this.style.transform='none';"
+          class="group p-5 rounded-2xl bg-slate-900/60 hover:bg-slate-900/90 border border-slate-800 hover:border-sky-500/40 backdrop-blur shadow-lg transition-all duration-200 hover:-translate-y-1"
         >
-          <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">📑</div>
-          <h3 style="font-size: 1rem; font-weight: 600; margin: 0 0 0.25rem 0; color: #f1f5f9;">ReDoc Schema</h3>
-          <p style="font-size: 0.8125rem; color: #94a3b8; margin: 0;">Clean, structured documentation for API schemas and models.</p>
+          <div class="w-9 h-9 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 text-lg mb-3.5 group-hover:scale-110 transition duration-200">
+            📑
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1 group-hover:text-sky-400 transition">ReDoc Schema</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Clean, structured documentation for API schemas and models.</p>
         </a>
 
         <!-- Project / Framework Documentation -->
@@ -481,25 +528,28 @@ const page = usePage();
           :href="docs_url"
           target="_blank"
           rel="noopener noreferrer"
-          style="display: block; padding: 1.25rem; border-radius: 0.75rem; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.1); color: inherit; text-decoration: none; transition: border-color 0.2s, transform 0.2s;"
-          onmouseover="this.style.borderColor='rgba(192,132,252,0.4)'; this.style.transform='translateY(-2px)';"
-          onmouseout="this.style.borderColor='rgba(148,163,184,0.1)'; this.style.transform='none';"
+          class="group p-5 rounded-2xl bg-slate-900/60 hover:bg-slate-900/90 border border-slate-800 hover:border-sky-500/40 backdrop-blur shadow-lg transition-all duration-200 hover:-translate-y-1"
         >
-          <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">📖</div>
-          <h3 style="font-size: 1rem; font-weight: 600; margin: 0 0 0.25rem 0; color: #f1f5f9;">Astris Docs</h3>
-          <p style="font-size: 0.8125rem; color: #94a3b8; margin: 0;">Official guides, controllers, Inertia integration, and tutorials.</p>
+          <div class="w-9 h-9 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 text-lg mb-3.5 group-hover:scale-110 transition duration-200">
+            📖
+          </div>
+          <h3 class="text-sm font-semibold text-white mb-1 group-hover:text-sky-400 transition">Astris Docs</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Official guides, controllers, Inertia integration, and tutorials.</p>
         </a>
       </div>
 
       <!-- Quick Command Tip -->
-      <div style="padding: 0.875rem 1.25rem; border-radius: 0.5rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(148, 163, 184, 0.08); font-size: 0.8125rem; color: #64748b; font-family: monospace;">
-        Get started: <span style="color: #38bdf8;">uv run orbit make:module billing</span> &bull; <span style="color: #818cf8;">uv run orbit serve</span>
+      <div class="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800/80 text-xs font-mono text-slate-400 flex items-center justify-center gap-2 shadow-inner">
+        <span>Get started:</span>
+        <code class="text-sky-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">uv run orbit make:module billing</code>
+        <span class="text-slate-600">&bull;</span>
+        <code class="text-indigo-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">uv run orbit serve</code>
       </div>
     </div>
 
-    <!-- Footer placeholder for layout balance -->
-    <footer style="text-align: center; font-size: 0.75rem; color: #475569;">
-      Built with ❤️ by <a href="https://github.com/TheFelixGomez" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">Felix Gomez</a>.
+    <!-- Footer -->
+    <footer class="text-center text-xs text-slate-500 py-4">
+      Built with ❤️ by <a href="https://github.com/TheFelixGomez" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-slate-300 underline underline-offset-4 transition">Felix Gomez</a>.
     </footer>
   </main>
 </template>

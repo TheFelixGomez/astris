@@ -138,8 +138,27 @@ async def dashboard(request: Request) -> InertiaResponse:
     return InertiaResponse(request, "Dashboard")
 """
 
+ASTRIS_LOGO_VUE_TEMPLATE = """<template>
+  <svg
+    viewBox="0 0 792 792"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="m50 757h88.8l37.8-92.3c-31.4-1.6-59-6.3-82.4-14.2z"/>
+    <path d="m596.3 550.8q-11 6.5-22.3 12.6l79.1 193.6h88.9l-98.1-236.5q-22.4 15.6-47.6 30.3z"/>
+    <path d="m210.1 582.6l185.9-454.7 147.5 360.9c25-14.4 48-29.9 68.2-46l-169.2-407.8h-93l-221.6 534.1c21.2 8.3 49.5 12.9 82.2 13.5z"/>
+    <path fill-rule="evenodd" d="m372.5 466.8l23.5 76.4 23.5-76.4 69-23.5-68.8-23.8-23.7-75.8-23.7 75.8-68.8 23.8 69 23.5z"/>
+    <path d="m756.2 309.9c-18.3-50.9-96.5-72.1-201.4-61.6 81.6-3.1 141.7 15.8 156.8 58 26.6 74.2-96.3 192.3-273.9 256.1-177.7 63.7-343.3 55.2-370-19-15.5-43.4 19.7-99.6 87.1-151.5-90.4 60.9-137.6 131.1-118.9 183.2 29.4 82 214.3 90.6 413.1 19.3 198.8-71.3 336.6-202.5 307.2-284.5z"/>
+    <path d="m90 533.2c2.1 6 5.3 11.5 9.4 16.6q-2.3-3.9-3.9-8.2c-12.7-35.5 18.2-82.5 77.1-127.1l12.8-31c-71.7 50.7-110.7 107.1-95.4 149.7z"/>
+    <path d="m437 275.7c-30 6.8-61.1 15.9-92.6 27.2q-0.3 0.1-0.6 0.2l-10.1 24.7q8.5-3.3 17.3-6.4c31.8-11.4 63.2-20.7 93.3-27.8l-7.4-17.9z"/>
+    <path d="m688.7 323.7q1.4 4.1 2.1 8.4c0-6.6-1.1-12.9-3.2-18.9-13.1-36.3-63.2-53.7-132.2-52.9l7 16.8c66.6-1.8 114.4 13.4 126.3 46.6z"/>
+  </svg>
+</template>
+"""
+
 VUE_LOGIN_TEMPLATE = """<script setup lang="ts">
 import { useForm, Link } from '@inertiajs/vue3'
+import AstrisLogo from '../../Components/AstrisLogo.vue'
 
 const form = useForm({
   email: '',
@@ -155,17 +174,22 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-slate-100 font-sans">
+  <div class="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-slate-100 font-sans relative selection:bg-sky-500 selection:text-white">
+    <!-- Subtle Background Glow -->
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-sky-500/10 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <div class="flex justify-center">
-        <span class="text-4xl">⚡</span>
+        <Link href="/" class="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur shadow-xl hover:border-sky-500/40 transition duration-200">
+          <AstrisLogo class="w-10 h-10 text-sky-400" />
+        </Link>
       </div>
-      <h2 class="mt-4 text-center text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+      <h2 class="mt-4 text-center text-3xl font-extrabold tracking-tight text-white">
         Sign in to your account
       </h2>
       <p class="mt-2 text-center text-sm text-slate-400">
         Or
-        <Link href="/register" class="font-medium text-blue-400 hover:text-blue-300 underline transition">
+        <Link href="/register" class="font-medium text-sky-400 hover:text-sky-300 underline underline-offset-4 transition">
           create a new account
         </Link>
       </p>
@@ -193,7 +217,7 @@ const submit = () => {
                 type="email"
                 autocomplete="email"
                 required
-                class="appearance-none block w-full px-3 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
+                class="appearance-none block w-full px-3.5 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition text-sm"
                 placeholder="you@example.com"
               />
             </div>
@@ -209,7 +233,7 @@ const submit = () => {
                 type="password"
                 autocomplete="current-password"
                 required
-                class="appearance-none block w-full px-3 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
+                class="appearance-none block w-full px-3.5 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition text-sm"
                 placeholder="••••••••"
               />
             </div>
@@ -222,7 +246,7 @@ const submit = () => {
                 id="remember"
                 v-model="form.remember"
                 type="checkbox"
-                class="h-4 w-4 text-blue-500 focus:ring-blue-400 border-slate-700 rounded bg-slate-800"
+                class="h-4 w-4 text-sky-500 focus:ring-sky-400 border-slate-700 rounded bg-slate-800"
               />
               <label for="remember" class="ml-2 block text-sm text-slate-400">Remember me</label>
             </div>
@@ -232,7 +256,7 @@ const submit = () => {
             <button
               type="submit"
               :disabled="form.processing"
-              class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition"
+              class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-sky-500 hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50 transition duration-200"
             >
               <span v-if="form.processing">Signing in...</span>
               <span v-else>Sign In</span>
@@ -247,6 +271,7 @@ const submit = () => {
 
 VUE_REGISTER_TEMPLATE = """<script setup lang="ts">
 import { useForm, Link } from '@inertiajs/vue3'
+import AstrisLogo from '../../Components/AstrisLogo.vue'
 
 const form = useForm({
   name: '',
@@ -263,17 +288,22 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-slate-100 font-sans">
+  <div class="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-slate-100 font-sans relative selection:bg-sky-500 selection:text-white">
+    <!-- Subtle Background Glow -->
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-sky-500/10 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <div class="flex justify-center">
-        <span class="text-4xl">⚡</span>
+        <Link href="/" class="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur shadow-xl hover:border-sky-500/40 transition duration-200">
+          <AstrisLogo class="w-10 h-10 text-sky-400" />
+        </Link>
       </div>
-      <h2 class="mt-4 text-center text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+      <h2 class="mt-4 text-center text-3xl font-extrabold tracking-tight text-white">
         Create a new account
       </h2>
       <p class="mt-2 text-center text-sm text-slate-400">
         Already have an account?
-        <Link href="/login" class="font-medium text-blue-400 hover:text-blue-300 underline transition">
+        <Link href="/login" class="font-medium text-sky-400 hover:text-sky-300 underline underline-offset-4 transition">
           Sign in
         </Link>
       </p>
@@ -291,7 +321,7 @@ const submit = () => {
                 type="text"
                 autocomplete="name"
                 required
-                class="appearance-none block w-full px-3 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
+                class="appearance-none block w-full px-3.5 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition text-sm"
                 placeholder="Jane Doe"
               />
             </div>
@@ -307,7 +337,7 @@ const submit = () => {
                 type="email"
                 autocomplete="email"
                 required
-                class="appearance-none block w-full px-3 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
+                class="appearance-none block w-full px-3.5 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition text-sm"
                 placeholder="you@example.com"
               />
             </div>
@@ -323,7 +353,7 @@ const submit = () => {
                 type="password"
                 autocomplete="new-password"
                 required
-                class="appearance-none block w-full px-3 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
+                class="appearance-none block w-full px-3.5 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition text-sm"
                 placeholder="••••••••"
               />
             </div>
@@ -339,7 +369,7 @@ const submit = () => {
                 type="password"
                 autocomplete="new-password"
                 required
-                class="appearance-none block w-full px-3 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
+                class="appearance-none block w-full px-3.5 py-2.5 border border-slate-700 rounded-xl shadow-sm placeholder-slate-500 bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition text-sm"
                 placeholder="••••••••"
               />
             </div>
@@ -350,7 +380,7 @@ const submit = () => {
             <button
               type="submit"
               :disabled="form.processing"
-              class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition"
+              class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-sky-500 hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50 transition duration-200"
             >
               <span v-if="form.processing">Creating account...</span>
               <span v-else>Register</span>
@@ -364,7 +394,8 @@ const submit = () => {
 """
 
 VUE_DASHBOARD_TEMPLATE = """<script setup lang="ts">
-import { usePage, router } from '@inertiajs/vue3'
+import { usePage, router, Link } from '@inertiajs/vue3'
+import AstrisLogo from '../Components/AstrisLogo.vue'
 
 const page = usePage()
 
@@ -374,19 +405,25 @@ const logout = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 text-slate-100 font-sans">
+  <div class="min-h-screen bg-slate-950 text-slate-100 font-sans relative selection:bg-sky-500 selection:text-white">
+    <!-- Subtle Background Ambient Glow -->
+    <div class="absolute top-0 right-1/4 w-[500px] h-[250px] bg-sky-500/10 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+
     <nav class="border-b border-slate-800 bg-slate-900/60 backdrop-blur sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-          <div class="flex items-center space-x-3">
-            <span class="text-2xl">⚡</span>
+        <div class="flex justify-between h-16 items-center">
+          <Link href="/" class="flex items-center space-x-3 group">
+            <AstrisLogo class="w-8 h-8 text-sky-400 group-hover:scale-105 transition duration-200" />
             <span class="font-bold text-lg text-white">Astris App</span>
-          </div>
+          </Link>
           <div class="flex items-center space-x-4">
-            <span class="text-sm text-slate-300">{{ page.props.auth?.user?.name || page.props.auth?.user?.email }}</span>
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/60 border border-slate-700/60 text-xs font-medium text-slate-300">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              {{ page.props.auth?.user?.name || page.props.auth?.user?.email }}
+            </div>
             <button
               @click="logout"
-              class="px-3.5 py-1.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 transition"
+              class="px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 transition duration-200"
             >
               Sign Out
             </button>
@@ -396,28 +433,37 @@ const logout = () => {
     </nav>
 
     <main class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-      <div v-if="page.props.flash?.success" class="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm">
-        {{ page.props.flash.success }}
+      <div v-if="page.props.flash?.success" class="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm flex items-center gap-2.5">
+        <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>{{ page.props.flash.success }}</span>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-xl">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl backdrop-blur">
         <h1 class="text-3xl font-extrabold text-white">Dashboard</h1>
         <p class="mt-2 text-slate-400">
-          Welcome to your authenticated Astris dashboard!
+          Welcome to your authenticated Astris application!
         </p>
 
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="p-6 rounded-xl bg-slate-800/60 border border-slate-700/60">
-            <div class="text-sm font-medium text-slate-400">Session Status</div>
-            <div class="mt-2 text-2xl font-bold text-emerald-400">Authenticated ✓</div>
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/60 shadow-sm">
+            <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">Session Status</div>
+            <div class="mt-2 text-xl font-bold text-emerald-400 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></span>
+              Authenticated
+            </div>
           </div>
-          <div class="p-6 rounded-xl bg-slate-800/60 border border-slate-700/60">
-            <div class="text-sm font-medium text-slate-400">User Email</div>
-            <div class="mt-2 text-lg font-semibold text-white">{{ page.props.auth?.user?.email }}</div>
+          <div class="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/60 shadow-sm">
+            <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">User Email</div>
+            <div class="mt-2 text-base font-semibold text-white truncate">{{ page.props.auth?.user?.email }}</div>
           </div>
-          <div class="p-6 rounded-xl bg-slate-800/60 border border-slate-700/60">
-            <div class="text-sm font-medium text-slate-400">Security</div>
-            <div class="mt-2 text-lg font-semibold text-blue-400">Signed Cookies Active</div>
+          <div class="p-6 rounded-2xl bg-slate-800/50 border border-slate-700/60 shadow-sm">
+            <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">Security Engine</div>
+            <div class="mt-2 text-base font-semibold text-sky-400 flex items-center gap-2">
+              <span>🛡️</span>
+              Signed Cookies & CSRF
+            </div>
           </div>
         </div>
       </div>
@@ -446,7 +492,14 @@ def install_auth_starter(base_path: Path | None = None) -> None:
         AUTH_CONTROLLER_TEMPLATE, encoding="utf-8"
     )
 
-    # 2. Frontend pages: resources/js/Pages/Auth/
+    # 2. Components: resources/js/Components/AstrisLogo.vue
+    components_dir = root / "resources" / "js" / "Components"
+    components_dir.mkdir(parents=True, exist_ok=True)
+    logo_file = components_dir / "AstrisLogo.vue"
+    if not logo_file.exists():
+        logo_file.write_text(ASTRIS_LOGO_VUE_TEMPLATE, encoding="utf-8")
+
+    # 3. Frontend pages: resources/js/Pages/Auth/
     auth_pages_dir = root / "resources" / "js" / "Pages" / "Auth"
     auth_pages_dir.mkdir(parents=True, exist_ok=True)
 
