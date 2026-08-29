@@ -49,6 +49,12 @@ dependencies = [
     "uvicorn[standard]>=0.52.4",
 ]
 
+[project.urls]
+Homepage = "https://astris.dev"
+Documentation = "https://astris.dev"
+Repository = "https://github.com/TheFelixGomez/astris"
+Issues = "https://github.com/TheFelixGomez/astris/issues"
+
 [project.scripts]
 astris = "astris.installer:installer_cli"
 astris-python = "astris.installer:installer_cli"

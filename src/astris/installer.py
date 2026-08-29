@@ -207,6 +207,7 @@ Open **`http://localhost:8000`** in your browser.
 
 **Astris** is a modern full-stack web framework for Python with expressive, type-safe elegance. Designed to help developers build and ship modern web applications with speed and simplicity.
 
+* **Documentation**: [https://astris.dev](https://astris.dev)
 * **Repository**: [https://github.com/TheFelixGomez/astris](https://github.com/TheFelixGomez/astris)
 * **Author**: Felix Gomez ([@TheFelixGomez](https://github.com/TheFelixGomez))
 """
@@ -242,7 +243,7 @@ async def index(request: Request) -> InertiaResponse:
             "version": "0.1.0",
             "api_docs_url": "/docs",
             "redoc_url": "/redoc",
-            "docs_url": "https://astris.dev/docs",
+            "docs_url": "https://astris.dev",
         },
     )
 """
