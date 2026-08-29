@@ -184,7 +184,7 @@ Open **`http://localhost:8000`** in your browser.
 | Command | Description |
 | :--- | :--- |
 | `uv run orbit serve` | Start full-stack development server with hot-reloading |
-| `uv run orbit make:module <name>` | Scaffold a complete domain module (Controller, Model, View) |
+| `uv run orbit make:module <name>` | Scaffold a complete domain module (Controller, Service, Model) |
 | `uv run orbit make:controller <name>` | Generate an Astris controller |
 | `uv run orbit make:model <name>` | Generate a database model |
 | `uv run orbit migrate` | Run all pending database migrations |
