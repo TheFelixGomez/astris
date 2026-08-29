@@ -31,20 +31,36 @@ def list_commands(ctx: typer.Context):
 
 @orbit_cli.command()
 def serve(
-    host: str = typer.Option(
-        "127.0.0.1", "--host", "-h", help="Bind socket to this host"
+    host: str | None = typer.Option(
+        None, "--host", "-h", help="Bind socket to this host (defaults to 127.0.0.1 in dev, 0.0.0.0 in prod)"
     ),
     port: int = typer.Option(8000, "--port", "-p", help="Bind socket to this port"),
-    reload: bool = typer.Option(
-        True, "--reload/--no-reload", help="Enable/disable auto-reload"
+    reload: bool | None = typer.Option(
+        None, "--reload/--no-reload", help="Enable/disable auto-reload"
     ),
-    vite: bool = typer.Option(
-        True,
+    vite: bool | None = typer.Option(
+        None,
         "--vite/--no-vite",
         help="Start concurrent Vite dev server if package.json exists",
     ),
+    prod: bool = typer.Option(
+        False,
+        "--prod",
+        help="Run in production mode (disables reload and Vite, sets host to 0.0.0.0, enables multi-worker)",
+    ),
+    workers: int | None = typer.Option(
+        None,
+        "--workers",
+        "-w",
+        help="Number of worker processes for production (defaults to 4 in prod)",
+    ),
 ):
-    """Start the development server (with concurrent Vite dev server if package.json exists)."""
+    """Start the application server (development with Vite HMR or production with --prod)."""
+    resolved_host = host or ("0.0.0.0" if prod else "127.0.0.1")
+    resolved_reload = False if prod else (True if reload is None else reload)
+    resolved_vite = False if prod else (True if vite is None else vite)
+    resolved_workers = workers if workers is not None else (4 if prod else 1)
+
     cwd = Path.cwd()
     cwd_str = str(cwd)
     if cwd_str not in sys.path:
@@ -54,7 +70,7 @@ def serve(
     package_json = cwd / "package.json"
     vite_proc = None
 
-    if package_json.exists() and vite:
+    if package_json.exists() and resolved_vite:
         typer.secho(
             "⚡ Full-stack project detected. Starting Vite dev server...",
             fg=typer.colors.MAGENTA,
@@ -73,26 +89,30 @@ def serve(
                 fg=typer.colors.YELLOW,
             )
 
+    mode_label = "in production mode" if prod else ""
     typer.secho(
-        f"🚀 Astris entering orbit on http://{host}:{port}", fg=typer.colors.CYAN
+        f"🚀 Astris entering orbit {mode_label} on http://{resolved_host}:{port}",
+        fg=typer.colors.CYAN,
     )
 
     try:
         reload_dirs = []
-        if (cwd / "app").exists():
-            reload_dirs.append(str(cwd / "app"))
-        if (cwd / "database").exists():
-            reload_dirs.append(str(cwd / "database"))
-        if not reload_dirs:
-            reload_dirs = [cwd_str]
+        if resolved_reload:
+            if (cwd / "app").exists():
+                reload_dirs.append(str(cwd / "app"))
+            if (cwd / "database").exists():
+                reload_dirs.append(str(cwd / "database"))
+            if not reload_dirs:
+                reload_dirs = [cwd_str]
 
         uvicorn.run(
             "main:app",
-            host=host,
+            host=resolved_host,
             port=port,
-            reload=reload,
-            reload_dirs=reload_dirs if reload else None,
-            reload_includes=["*.py", ".env*"] if reload else None,
+            reload=resolved_reload,
+            workers=resolved_workers if not resolved_reload else None,
+            reload_dirs=reload_dirs if resolved_reload else None,
+            reload_includes=["*.py", ".env*"] if resolved_reload else None,
             reload_excludes=[
                 "node_modules",
                 "resources",
@@ -102,7 +122,7 @@ def serve(
                 "dist",
                 "build",
             ]
-            if reload
+            if resolved_reload
             else None,
             app_dir=cwd_str,
         )
