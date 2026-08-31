@@ -28,6 +28,7 @@ astris new <project_name> [options]
 | Flag | Type | Description |
 | :--- | :--- | :--- |
 | `--auth / --no-auth` | boolean | Enable or disable the full-stack authentication starter kit (default: enabled) |
+| `--claude` | boolean | Scaffold Claude Code agent skills in `.claude/skills` alongside universal `.agents/skills` |
 | `--local <path>` | string | Links a local clone of the Astris framework instead of PyPI (for framework contributors) |
 
 ## Examples

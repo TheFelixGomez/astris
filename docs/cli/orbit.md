@@ -14,6 +14,8 @@
 | `orbit migrate` | Run all pending database migrations |
 | `orbit make:migration "<msg>"` | Auto-generate a new Alembic schema migration |
 | `orbit key:generate` | Generate a new 32-byte secret `APP_KEY` in `.env` |
+| `orbit skills:install` | Install or regenerate AI agent skills for the project |
+| `orbit skills:update` | Re-sync AI agent skills to match installed package versions |
 
 ## Command Details
 
@@ -132,6 +134,29 @@ uv run orbit key:generate --show
 * When provisioning a new environment (staging, production).
 * When rotating application secrets for security maintenance.
 *(Note: `APP_KEY` is already generated automatically when you create a project with `astris new`.)*
+
+### 9. `orbit skills:install`
+Installs or regenerates the official Astris AI agent skill for Universal agents (`.agents/skills/astris/SKILL.md`):
+
+```bash
+uv run orbit skills:install
+```
+
+Pass `--claude` to install in `.claude/skills/astris/SKILL.md` as well:
+```bash
+uv run orbit skills:install --claude
+```
+
+### 10. `orbit skills:update`
+Updates project skills to match the currently installed version of Astris:
+
+```bash
+uv run orbit skills:update
+```
+
+::: tip Adding AI Skills to `.gitignore`
+Feel free to add `.agents/` and `.claude/` to your application's `.gitignore`, as these files are automatically regenerated whenever you run `uv run orbit skills:install` or `uv run orbit skills:update`.
+:::
 
 ## Next Steps
 
