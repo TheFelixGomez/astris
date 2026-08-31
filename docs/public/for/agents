@@ -43,10 +43,11 @@ Once created:
    ```bash
    npm install
    ```
-3. Discover and link agent skills from installed packages (FastAPI, SQLModel, Typer, Astris):
+3. Install the official Astris AI agent skill:
    ```bash
-   uvx library-skills --yes --claude
+   uv run orbit skills:install
    ```
+   *(Optional: You may also run `uvx library-skills --yes --claude` to discover skills from third-party packages)*
 4. Start the application with hot-reloading:
    ```bash
    uv run orbit serve
@@ -55,7 +56,7 @@ Once created:
 
 Load the Astris guidelines immediately for the session by reading `.agents/skills/astris/SKILL.md` or `.claude/skills/astris/SKILL.md`. Do not ask the user to restart the session.
 
-If the user prefers to keep local AI tooling directories out of version control, recommend adding `.agents/` and `.claude/` to `.gitignore`.
+Feel free to recommend adding `.agents/` and `.claude/` to `.gitignore`, as these skills are automatically regenerated when running `orbit skills:install` or `orbit skills:update`.
 
 ## Architecture & Code Conventions
 
@@ -175,6 +176,8 @@ Always run Orbit commands via `uv run orbit`:
 - `uv run orbit make:migration "<msg>"`: Generate an Alembic schema migration.
 - `uv run orbit migrate`: Run pending migrations.
 - `uv run orbit key:generate`: Generate a 32-byte secret key in `.env`.
+- `uv run orbit skills:install`: Install or regenerate AI agent skills for the project.
+- `uv run orbit skills:update`: Re-sync AI agent skills with installed package versions.
 
 ## Key Rules for AI Agents
 - Always configure through `.env` and `app/core/config.py`.
