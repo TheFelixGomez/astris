@@ -43,11 +43,15 @@ Once created:
    ```bash
    npm install
    ```
-3. Start the application with hot-reloading:
+3. Discover and link agent skills from installed packages (FastAPI, SQLModel, Typer, Astris):
+   ```bash
+   uvx library-skills --yes
+   ```
+4. Start the application with hot-reloading:
    ```bash
    uv run orbit serve
    ```
-4. Tell the user the application is live at `http://localhost:8000`.
+5. Tell the user the application is live at `http://localhost:8000`.
 
 ## Architecture & Code Conventions
 
