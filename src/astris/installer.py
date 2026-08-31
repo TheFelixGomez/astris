@@ -587,15 +587,16 @@ const page = usePage();
         else:
             subprocess.run(["uv", "add", "astris-python"], cwd=project_dir, check=True)
 
-    # 12. Scaffold bundled Astris agent skill
+    # 12. Scaffold bundled Astris agent skills (Universal & Claude Code)
     astris_skill = Path(__file__).parent / ".agents" / "skills" / "astris" / "SKILL.md"
     if astris_skill.exists():
-        target_skill_dir = project_dir / ".agents" / "skills" / "astris"
-        target_skill_dir.mkdir(parents=True, exist_ok=True)
-        (target_skill_dir / "SKILL.md").write_text(
-            astris_skill.read_text(encoding="utf-8"),
-            encoding="utf-8",
-        )
+        skill_text = astris_skill.read_text(encoding="utf-8")
+        for skill_dir_path in [
+            project_dir / ".agents" / "skills" / "astris",
+            project_dir / ".claude" / "skills" / "astris",
+        ]:
+            skill_dir_path.mkdir(parents=True, exist_ok=True)
+            (skill_dir_path / "SKILL.md").write_text(skill_text, encoding="utf-8")
 
     typer.secho(
         f"\n✓ Project {name} created successfully!", fg=typer.colors.GREEN, bold=True

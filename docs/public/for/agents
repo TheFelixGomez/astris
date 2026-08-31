@@ -45,7 +45,7 @@ Once created:
    ```
 3. Discover and link agent skills from installed packages (FastAPI, SQLModel, Typer, Astris):
    ```bash
-   uvx library-skills --yes
+   uvx library-skills --yes --claude
    ```
 4. Start the application with hot-reloading:
    ```bash
@@ -53,7 +53,7 @@ Once created:
    ```
 5. Tell the user the application is live at `http://localhost:8000`.
 
-Load the Astris guidelines immediately for the session by reading `.agents/skills/astris/SKILL.md`. Do not ask the user to restart the session.
+Load the Astris guidelines immediately for the session by reading `.agents/skills/astris/SKILL.md` or `.claude/skills/astris/SKILL.md`. Do not ask the user to restart the session.
 
 ## Architecture & Code Conventions
 
