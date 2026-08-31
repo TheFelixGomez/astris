@@ -1,6 +1,6 @@
 [project]
 name = "astris-python"
-version = "0.1.0"
+version = "0.1.1"
 description = "The modern full-stack web framework for Python. Everything you need to go from idea to orbit; for developers who want to build and ship at escape velocity."
 readme = "README.md"
 authors = [

@@ -312,7 +312,7 @@ async def index(request: Request) -> InertiaResponse:
         props={
             "status": "online",
             "message": "Welcome to your Astris application! 🚀",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "api_docs_url": "/docs",
             "redoc_url": "/redoc",
             "docs_url": "https://astris.dev",
