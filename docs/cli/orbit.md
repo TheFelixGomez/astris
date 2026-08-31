@@ -81,6 +81,11 @@ Scaffolds the full-stack authentication starter kit:
 uv run orbit make:auth
 ```
 
+To overwrite existing authentication files if they were previously created:
+```bash
+uv run orbit make:auth --force
+```
+
 Creates:
 * `app/modules/auth/auth_controller.py`
 * `app/modules/auth/auth_service.py`

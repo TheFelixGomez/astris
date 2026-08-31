@@ -473,12 +473,31 @@ const logout = () => {
 """
 
 
-def install_auth_starter(base_path: Path | None = None) -> None:
+def install_auth_starter(base_path: Path | None = None, force: bool = False) -> None:
     """Install a full-stack authentication starter kit (models, services, controllers, and Vue pages)."""
     root = base_path or Path.cwd()
 
-    # 1. Backend module: app/modules/auth/
     auth_module_dir = root / "app" / "modules" / "auth"
+    auth_pages_dir = root / "resources" / "js" / "Pages" / "Auth"
+    dashboard_file = root / "resources" / "js" / "Pages" / "Dashboard.vue"
+
+    target_files = [
+        auth_module_dir / "auth_model.py",
+        auth_module_dir / "auth_service.py",
+        auth_module_dir / "auth_controller.py",
+        auth_pages_dir / "Login.vue",
+        auth_pages_dir / "Register.vue",
+        dashboard_file,
+    ]
+
+    existing_files = [f for f in target_files if f.exists()]
+    if existing_files and not force:
+        file_list = ", ".join(f.name for f in existing_files)
+        raise FileExistsError(
+            f"Authentication files already exist ({file_list}). Use --force to overwrite."
+        )
+
+    # 1. Backend module: app/modules/auth/
     auth_module_dir.mkdir(parents=True, exist_ok=True)
     (auth_module_dir / "__init__.py").touch()
 
@@ -500,7 +519,6 @@ def install_auth_starter(base_path: Path | None = None) -> None:
         logo_file.write_text(ASTRIS_LOGO_VUE_TEMPLATE, encoding="utf-8")
 
     # 3. Frontend pages: resources/js/Pages/Auth/
-    auth_pages_dir = root / "resources" / "js" / "Pages" / "Auth"
     auth_pages_dir.mkdir(parents=True, exist_ok=True)
 
     (auth_pages_dir / "Login.vue").write_text(VUE_LOGIN_TEMPLATE, encoding="utf-8")
@@ -509,4 +527,5 @@ def install_auth_starter(base_path: Path | None = None) -> None:
     )
 
     pages_dir = root / "resources" / "js" / "Pages"
-    (pages_dir / "Dashboard.vue").write_text(VUE_DASHBOARD_TEMPLATE, encoding="utf-8")
+    pages_dir.mkdir(parents=True, exist_ok=True)
+    dashboard_file.write_text(VUE_DASHBOARD_TEMPLATE, encoding="utf-8")

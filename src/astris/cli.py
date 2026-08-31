@@ -420,12 +420,16 @@ def key_generate(
 
 
 @orbit_cli.command("make:auth")
-def make_auth():
+def make_auth(
+    force: bool = typer.Option(
+        False, "--force", "-f", help="Overwrite existing authentication files"
+    ),
+):
     """Scaffold complete authentication (routes, controller, service, model, and Inertia Vue pages)."""
     from astris.auth.installer import install_auth_starter
 
     try:
-        install_auth_starter()
+        install_auth_starter(force=force)
         typer.secho(
             "✓ Authentication scaffolding generated successfully!\n"
             "  - Backend:  app/modules/auth (controller, service, model)\n"
@@ -436,6 +440,9 @@ def make_auth():
             "  2. Run: uv run orbit migrate",
             fg=typer.colors.GREEN,
         )
+    except FileExistsError as e:
+        typer.secho(f"Error: {e}", fg=typer.colors.RED)
+        raise typer.Exit(1)
     except Exception as e:
         typer.secho(f"Error generating auth scaffolding: {e}", fg=typer.colors.RED)
         raise typer.Exit(1) from e

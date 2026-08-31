@@ -632,7 +632,7 @@ const page = usePage();
     if auth:
         from astris.auth.installer import install_auth_starter
 
-        install_auth_starter(project_dir)
+        install_auth_starter(project_dir, force=True)
         typer.secho(
             "✓ Scaffolded full-stack authentication starter kit", fg=typer.colors.GREEN
         )
