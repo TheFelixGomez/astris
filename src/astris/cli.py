@@ -439,3 +439,40 @@ def make_auth():
     except Exception as e:
         typer.secho(f"Error generating auth scaffolding: {e}", fg=typer.colors.RED)
         raise typer.Exit(1) from e
+
+
+@orbit_cli.command("skills:install")
+def skills_install(
+    claude: bool = typer.Option(
+        False, "--claude", help="Install skills for Claude Code in .claude/skills as well"
+    ),
+):
+    """Install or regenerate AI agent skills for the project."""
+    astris_skill = Path(__file__).parent / ".agents" / "skills" / "astris" / "SKILL.md"
+    if not astris_skill.exists():
+        typer.secho("Error: Astris skill file not found in package.", fg=typer.colors.RED)
+        raise typer.Exit(1)
+
+    skill_text = astris_skill.read_text(encoding="utf-8")
+    targets = [Path.cwd() / ".agents" / "skills" / "astris"]
+    if claude:
+        targets.append(Path.cwd() / ".claude" / "skills" / "astris")
+
+    for target_dir in targets:
+        target_dir.mkdir(parents=True, exist_ok=True)
+        (target_dir / "SKILL.md").write_text(skill_text, encoding="utf-8")
+
+    typer.secho("✓ Astris AI skill installed successfully!", fg=typer.colors.GREEN)
+    typer.echo("  - Universal: .agents/skills/astris/SKILL.md")
+    if claude:
+        typer.echo("  - Claude:    .claude/skills/astris/SKILL.md")
+
+
+@orbit_cli.command("skills:update")
+def skills_update(
+    claude: bool = typer.Option(
+        False, "--claude", help="Update skills for Claude Code in .claude/skills as well"
+    ),
+):
+    """Update and re-sync all AI agent skills to match installed package versions."""
+    skills_install(claude=claude)
