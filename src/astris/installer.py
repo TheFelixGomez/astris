@@ -104,13 +104,31 @@ def new(
     ensure_migration_setup(project_dir)
 
     # 1b. Centralized settings: app/core/config.py
-    config_stub = """from astris.config import Settings as BaseAppSettings
+    config_stub = """\"\"\"
+|--------------------------------------------------------------------------
+| Application Configuration
+|--------------------------------------------------------------------------
+|
+| Centralized, type-safe application settings powered by Pydantic Settings.
+| Environment variables defined in your .env file are automatically
+| validated and type-cast when the application boots.
+|
+| Access settings anywhere in your app:
+|     from app.core.config import settings
+|     api_key = settings.stripe_api_key
+|
+\"\"\"
+
+from astris.config import Settings as BaseAppSettings
 
 
 class Settings(BaseAppSettings):
     \"\"\"Extend application settings with custom environment variables.\"\"\"
 
-    # Add custom settings here (e.g. STRIPE_KEY, REDIS_URL, etc.)
+    # Define custom environment variables below:
+    # stripe_api_key: str | None = None
+    # redis_url: str = "redis://localhost:6379"
+    # max_upload_size_mb: int = 25
     pass
 
 
@@ -238,14 +256,48 @@ uv run orbit skills:install --claude
     )
 
     # 3. main.py entry point
-    main_content = """from astris import Astris
+    main_content = """\"\"\"
+|--------------------------------------------------------------------------
+| Application Entrypoint & Kernel
+|--------------------------------------------------------------------------
+|
+| This file instantiates the Astris application instance.
+| The Astris() kernel automatically:
+|   1. Loads configuration from app/core/config.py and .env
+|   2. Configures the security and session middleware pipeline
+|   3. Discovers domain controllers in app/modules/
+|   4. Connects the Inertia.js Vue 3 frontend view engine
+|
+| Run development server:
+|     uv run orbit serve
+|
+| Run in production:
+|     uv run orbit serve --prod
+|
+\"\"\"
+
+from astris import Astris
 
 app = Astris()
 """
     (project_dir / "main.py").write_text(main_content, encoding="utf-8")
 
     # 4. Default Welcome Controller using InertiaResponse
-    welcome_controller = """from astris.http import Request
+    welcome_controller = """\"\"\"
+|--------------------------------------------------------------------------
+| Welcome Controller
+|--------------------------------------------------------------------------
+|
+| This controller handles the root URL ('/') of your Astris application.
+| It returns an InertiaResponse which renders the Vue 3 component located
+| at resources/js/Pages/Welcome.vue with typed server props.
+|
+| Feel free to modify, replace, or remove this module and controller
+| to suit your application's requirements.
+|
+\"\"\"
+
+from astris.http import Request
 from astris.inertia import InertiaResponse
 from astris.routing import Controller
 
