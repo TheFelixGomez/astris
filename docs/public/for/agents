@@ -53,6 +53,8 @@ Once created:
    ```
 5. Tell the user the application is live at `http://localhost:8000`.
 
+Load the Astris guidelines immediately for the session by reading `.agents/skills/astris/SKILL.md`. Do not ask the user to restart the session.
+
 ## Architecture & Code Conventions
 
 ### Project Layout
