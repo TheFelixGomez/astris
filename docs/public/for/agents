@@ -55,6 +55,8 @@ Once created:
 
 Load the Astris guidelines immediately for the session by reading `.agents/skills/astris/SKILL.md` or `.claude/skills/astris/SKILL.md`. Do not ask the user to restart the session.
 
+If the user prefers to keep local AI tooling directories out of version control, recommend adding `.agents/` and `.claude/` to `.gitignore`.
+
 ## Architecture & Code Conventions
 
 ### Project Layout
