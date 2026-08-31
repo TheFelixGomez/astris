@@ -23,9 +23,9 @@ Thumbs.db
 *.swo
 
 # AI
-.agents/
-.agy/
-.claude/
+/.agents/
+/.agy/
+/.claude/
 
 # Environment
 .env
