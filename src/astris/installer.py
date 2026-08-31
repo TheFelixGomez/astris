@@ -150,7 +150,7 @@ dependencies = []
 '''
     (project_dir / "pyproject.toml").write_text(pyproject_content, encoding="utf-8")
     project_readme = f"""<p align="center" style="padding: 20px 0 10px 0;">
-  <a href="https://github.com/TheFelixGomez/astris">
+  <a href="https://astris.dev">
     <img src="https://raw.githubusercontent.com/TheFelixGomez/astris/main/.github/assets/astris-logo-name.png" alt="Astris" width="380">
   </a>
 </p>
@@ -195,6 +195,20 @@ Open **`http://localhost:8000`** in your browser.
 | `uv run orbit migrate` | Run all pending database migrations |
 | `uv run orbit make:migration "<message>"` | Auto-generate a new database schema migration |
 | `uv run orbit key:generate` | Generate a new 32-byte secret `APP_KEY` in `.env` |
+| `uv run orbit skills:install` | Install or regenerate AI agent skills for the project |
+| `uv run orbit skills:update` | Re-sync AI agent skills to match installed package versions |
+
+---
+
+## 🤖 Building with AI
+
+This project comes pre-configured with official Astris skills in `.agents/skills/astris/` (Universal assistants) and `.claude/skills/astris/` (Claude Code).
+To refresh or reinstall skills after updating dependencies:
+```bash
+uv run orbit skills:install
+# Or for Claude Code:
+uv run orbit skills:install --claude
+```
 
 ---
 
@@ -205,6 +219,7 @@ Open **`http://localhost:8000`** in your browser.
 * **`resources/js/Pages/`**: Frontend single-page application views.
 * **`database/migrations/`**: Database schema migrations managed by Orbit.
 * **`public/`**: Web root directory for static assets (favicon, images, robots.txt).
+* **`.agents/skills/` & `.claude/skills/`**: Official AI agent skills for Antigravity, Claude Code, Codex, Cursor, and universal assistants.
 
 ---
 
