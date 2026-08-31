@@ -42,10 +42,10 @@ dependencies = [
     "fastapi>=0.141.1",
     "itsdangerous>=2.2.0",
     "pwdlib[argon2]>=0.3.1",
-    "pydantic>=2.13.4",
+    "pydantic>=2.13.5",
     "pydantic-settings>=2.15.0",
-    "sqlmodel>=0.0.39",
-    "typer>=0.27.1",
+    "sqlmodel>=0.0.42",
+    "typer>=0.27.2",
     "uvicorn[standard]>=0.52.4",
 ]
 
