@@ -17,6 +17,20 @@ Before creating your first Astris project, ensure you have the following install
    ```
 3. **[Node.js](https://nodejs.org/)** version `^22.18.0` or `>=24.12.0` (Node 24 LTS recommended) & npm.
 
+## Getting Started Using AI
+
+If you build with AI coding assistants (such as Claude Code, Cursor, GitHub Copilot, Antigravity, or OpenCode), you can prime your agent with the official Astris playbook before writing your first line of code.
+
+This equips your assistant with Astris's full-stack architecture, domain-driven conventions, and Orbit CLI commands. Paste this into your agent to get started:
+
+```text
+I'm building a new Astris application.
+
+Fetch and follow the instructions from https://astris.dev/for/agents. Treat the returned Markdown as the source of truth for how to install, set up, and develop with Astris in this session.
+```
+
+After the agent reads the instructions, it will guide you step by step and keep the setup aligned with Astris's conventions and defaults.
+
 ## Creating a New Project
 
 ### Method 1: Zero-Install with `uvx` (Recommended)

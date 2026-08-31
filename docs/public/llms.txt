@@ -1,0 +1,27 @@
+# Astris
+
+> The modern full-stack web framework for Python. Full-stack simplicity with modern Python performance.
+
+Astris combines FastAPI, Inertia.js (v2), Vue 3, Tailwind CSS v4, and SQLModel into a unified, high-velocity developer experience.
+
+## Documentation
+
+- [Getting Started](https://astris.dev/getting-started/introduction): Overview and philosophy of Astris.
+- [Installation](https://astris.dev/getting-started/installation): Prerequisites and project creation with uvx.
+- [Directory Structure](https://astris.dev/getting-started/directory-structure): Domain-driven module organization.
+- [Configuration](https://astris.dev/getting-started/configuration): Centralized settings and .env loading.
+- [Application Kernel](https://astris.dev/architecture/kernel): Core lifecycle, middleware pipeline, and configuration.
+- [Controllers & Routes](https://astris.dev/architecture/controllers): Controller routing, parameters, and Dependency Injection.
+- [Module Auto-Discovery](https://astris.dev/architecture/module-discovery): Automatic controller and model scanning.
+- [Inertia.js Monolith](https://astris.dev/frontend/inertia): Rendering Vue 3 single-page applications from Python.
+- [Forms & Validation](https://astris.dev/frontend/forms-validation): Form handling with useForm and automatic error flashing.
+- [Database & SQLModel](https://astris.dev/database/models): Declarative tables, DTO schemas, and queries.
+- [Schema Migrations](https://astris.dev/database/migrations): Alembic migration workflows with Orbit CLI.
+- [Authentication](https://astris.dev/security/authentication): Signed session cookies and Argon2id password hashing.
+- [CSRF Protection](https://astris.dev/security/csrf): Automated XSRF token handling.
+- [Orbit CLI](https://astris.dev/cli/orbit): Developer CLI for scaffolding, migrations, and serving.
+- [Production & Docker](https://astris.dev/deployment/production): Multi-stage Docker deployment and orbit serve --prod.
+
+## AI Agent Playbook
+
+- [Astris for Agents](https://astris.dev/for/agents): Step-by-step setup guide and code conventions for AI coding agents.
