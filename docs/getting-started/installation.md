@@ -31,6 +31,10 @@ Fetch and follow the instructions from https://astris.dev/for/agents. Treat the 
 
 After the agent reads the instructions, it will guide you step by step and keep the setup aligned with Astris's conventions and defaults.
 
+::: tip Adding AI Skills to `.gitignore`
+Feel free to add `.agents/` and `.claude/` to your application's `.gitignore`, as these files are automatically regenerated when running `uv run orbit skills:install` and `uv run orbit skills:update`.
+:::
+
 ## Creating a New Project
 
 ### Method 1: Zero-Install with `uvx` (Recommended)
