@@ -36,6 +36,11 @@ def new(
         "--auth/--no-auth",
         help="Scaffold full-stack authentication starter kit (default: enabled)",
     ),
+    claude: bool = typer.Option(
+        False,
+        "--claude",
+        help="Scaffold Claude Code agent skills in .claude/skills as well",
+    ),
 ):
     """Scaffold a brand-new Astris full-stack project."""
     project_dir = Path.cwd() / name
@@ -587,14 +592,15 @@ const page = usePage();
         else:
             subprocess.run(["uv", "add", "astris-python"], cwd=project_dir, check=True)
 
-    # 12. Scaffold bundled Astris agent skills (Universal & Claude Code)
+    # 12. Scaffold bundled Astris agent skills
     astris_skill = Path(__file__).parent / ".agents" / "skills" / "astris" / "SKILL.md"
     if astris_skill.exists():
         skill_text = astris_skill.read_text(encoding="utf-8")
-        for skill_dir_path in [
-            project_dir / ".agents" / "skills" / "astris",
-            project_dir / ".claude" / "skills" / "astris",
-        ]:
+        target_dirs = [project_dir / ".agents" / "skills" / "astris"]
+        if claude:
+            target_dirs.append(project_dir / ".claude" / "skills" / "astris")
+
+        for skill_dir_path in target_dirs:
             skill_dir_path.mkdir(parents=True, exist_ok=True)
             (skill_dir_path / "SKILL.md").write_text(skill_text, encoding="utf-8")
 
