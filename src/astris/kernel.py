@@ -9,9 +9,16 @@ from typing import Any, Literal
 from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.docs import (
+    get_redoc_html,
+    get_swagger_ui_html,
+    get_swagger_ui_oauth2_redirect_html,
+)
 from pydantic import ValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.requests import Request
+from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 
 from astris.config import Settings, settings
@@ -131,14 +138,6 @@ class Astris:
 
     def _configure_docs(self) -> None:
         """Register OpenAPI documentation routes with Astris branding and custom favicon."""
-        from fastapi.openapi.docs import (
-            get_redoc_html,
-            get_swagger_ui_html,
-            get_swagger_ui_oauth2_redirect_html,
-        )
-        from starlette.requests import Request
-        from starlette.responses import HTMLResponse
-
         if self.docs_url:
 
             @self.app.get(self.docs_url, include_in_schema=False)

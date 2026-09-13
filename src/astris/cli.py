@@ -1,4 +1,5 @@
 import io
+import secrets
 import subprocess
 import sys
 from pathlib import Path
@@ -387,8 +388,6 @@ def key_generate(
     ),
 ):
     """Generate and set the application encryption key (APP_KEY)."""
-    import secrets
-
     key = secrets.token_urlsafe(32)
     if show:
         typer.secho(f"APP_KEY={key}", fg=typer.colors.CYAN)

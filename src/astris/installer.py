@@ -1,4 +1,6 @@
+import importlib.resources as pkg_resources
 import io
+import secrets
 import subprocess
 import sys
 from pathlib import Path
@@ -88,8 +90,6 @@ def new(
 
     # Default framework favicon
     try:
-        import importlib.resources as pkg_resources
-
         favicon_bytes = (
             pkg_resources.files("astris.assets").joinpath("favicon.ico").read_bytes()
         )
@@ -135,8 +135,6 @@ class Settings(BaseAppSettings):
 settings = Settings()
 """
     (core_dir / "config.py").write_text(config_stub, encoding="utf-8")
-
-    import secrets
 
     # 2. Environment configuration (.env and .env.example)
     app_key = secrets.token_urlsafe(32)
