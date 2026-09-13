@@ -11,6 +11,7 @@ from astris.routing.router import (
     Query,
     Security,
     UploadFile,
+    has_route,
     status,
 )
 
@@ -27,5 +28,6 @@ __all__ = [
     "Query",
     "Security",
     "UploadFile",
+    "has_route",
     "status",
 ]

@@ -297,16 +297,13 @@ app = Astris()
 
 from astris.http import Request
 from astris.inertia import InertiaResponse
-from astris.routing import Controller
+from astris.routing import Controller, has_route
 
 controller = Controller(tags=["Home"])
 
 
 @controller.get("/")
 async def index(request: Request) -> InertiaResponse:
-    has_auth = any(
-        getattr(route, "path", None) == "/login" for route in request.app.routes
-    )
     return InertiaResponse(
         request,
         "Welcome",
@@ -314,7 +311,7 @@ async def index(request: Request) -> InertiaResponse:
             "status": "online",
             "message": "Welcome to your Astris application! 🚀",
             "version": "0.1.1",
-            "has_auth": has_auth,
+            "has_auth": has_route(request, "/login"),
             "api_docs_url": "/docs",
             "redoc_url": "/redoc",
             "docs_url": "https://astris.dev",
