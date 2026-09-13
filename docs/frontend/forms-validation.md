@@ -63,6 +63,45 @@ const submit = () => {
 </template>
 ```
 
+::: details How `useForm` works in Vue 3
+
+* **Import `useForm`**:
+  ```typescript
+  import { useForm } from '@inertiajs/vue3'
+  ```
+  Provides a reactive form helper that tracks inputs, errors, and loading states.
+* **Initialize reactive state**:
+  ```typescript
+  const form = useForm({
+    title: '',
+    content: '',
+  })
+  ```
+  Creates reactive properties (`form.title`, `form.content`), loading states (`form.processing`), and error messages (`form.errors`).
+* **Submit the form**:
+  ```typescript
+  form.post('/articles', {
+    onSuccess: () => form.reset(),
+  })
+  ```
+  Sends an asynchronous `POST` request with the CSRF token attached automatically. `form.reset()` clears all fields when successful.
+* **Display validation errors**:
+  ```vue
+  <input
+    v-model="form.title"
+    :class="{ 'border-rose-500': form.errors.title }"
+  />
+  <p v-if="form.errors.title">{{ form.errors.title }}</p>
+  ```
+  Conditionally highlights the border and displays the server error message.
+* **Prevent duplicate submissions**:
+  ```vue
+  <button type="submit" :disabled="form.processing">
+  ```
+  Disables the button automatically while the request is in-flight.
+
+:::
+
 ## Server-Side Validation in Python
 
 Validate incoming requests using Pydantic or SQLModel schemas:
@@ -75,21 +114,56 @@ from pydantic import BaseModel, Field
 controller = Controller(prefix="/articles")
 
 
-class ArticleCreateDTO(BaseModel):
+class ArticleCreate(BaseModel):
     title: str = Field(min_length=3, max_length=100)
     content: str = Field(min_length=10)
 
 
 @controller.post("/")
-async def store(request: Request, dto: ArticleCreateDTO) -> RedirectResponse:
-    # Validation is executed automatically before this function runs.
-    # If invalid, Astris automatically intercepts the 422 error,
-    # flashes errors into $page.props.errors, and redirects back via 303.
-    
-    # Save to database...
-    
+async def store(request: Request, dto: ArticleCreate) -> RedirectResponse:
+    # 1. Validation runs automatically before this function body executes.
+    # 2. If valid, save to database:
+    #    article = Article.model_validate(dto)
+    #    db.add(article)
+
+    # 3. Return a 303 redirect to the target page
     return RedirectResponse(url="/articles", status_code=status.HTTP_303_SEE_OTHER)
 ```
+
+::: details Step-by-step breakdown
+
+### Step 1: Define the validation schema
+
+```python
+class ArticleCreate(BaseModel):
+    title: str = Field(min_length=3, max_length=100)
+    content: str = Field(min_length=10)
+```
+
+* `title`: Requires a string between 3 and 100 characters.
+* `content`: Requires a string with at least 10 characters.
+
+### Step 2: Accept the schema in your controller
+
+```python
+@controller.post("/")
+async def store(request: Request, dto: ArticleCreate) -> RedirectResponse:
+```
+
+Astris parses the incoming request body and validates it against `ArticleCreate`. If validation passes, `dto` is injected as a typed instance into your function. If validation fails, Astris raises a `422 Unprocessable Entity` error.
+
+:::
+
+::: details How Astris automates validation errors
+
+When validation fails (e.g., the title is only 1 character long):
+1. Astris detects the validation failure and generates an HTTP 422 response.
+2. Astris's built-in Inertia exception handler intercepts the 422 error.
+3. It extracts the error messages into a flat dictionary (e.g. `{"title": "String should have at least 3 characters"}`).
+4. It flashes this dictionary into session state and immediately responds with a **`303 See Other`** redirect back to the previous page.
+5. On the previous page, Inertia populates `form.errors` with these exact messages without full-page reloads.
+
+:::
 
 ## Redirecting After Form Submission
 
@@ -99,21 +173,23 @@ After processing a mutating request (`POST`, `PUT`, `PATCH`, or `DELETE`) in you
 from astris.http import RedirectResponse, status
 
 @controller.post("/")
-async def store(request: Request, dto: ArticleCreateDTO) -> RedirectResponse:
+async def store(request: Request, dto: ArticleCreate) -> RedirectResponse:
     # 1. Save to database...
 
     # 2. Redirect to the target page
     return RedirectResponse(url="/articles", status_code=status.HTTP_303_SEE_OTHER)
 ```
 
-### Why `303 See Other`?
+::: details Why HTTP 303 is required for Inertia
 
 Inertia.js uses standard HTTP redirect semantics to drive its single-page application navigation:
 * **Forces a `GET` request**: Unlike a `302` or `307` redirect (which can preserve the original HTTP method), a `303 See Other` explicitly instructs the browser and Inertia client to follow the redirect as a **`GET`** request to load the new page view.
 * **Prevents Duplicate Submissions**: It eliminates the dreaded "Confirm Form Resubmission" dialog if the user refreshes their browser.
 
-::: tip Automatic Validation Error Handling
-If validation fails on the server, you don't need to write any error-handling code. Astris automatically intercepts invalid inputs, flashes field errors into session state, and redirects back to the previous page where `form.errors` is hydrated in Vue immediately.
+:::
+
+::: tip Zero Error Boilerplate
+You never need to write manual `try/except` blocks or parse validation errors in your controllers. Astris handles validation failure, flash message persistence, and page redirection entirely behind the scenes.
 :::
 
 ## Next Steps

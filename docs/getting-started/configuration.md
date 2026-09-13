@@ -26,7 +26,6 @@ from astris.config import Settings as BaseAppSettings
 class Settings(BaseAppSettings):
     """Extend application settings with custom environment variables."""
 
-    # Add custom settings with automatic type casting
     stripe_api_key: str | None = None
     redis_url: str = "redis://localhost:6379"
     max_upload_size_mb: int = 25
@@ -34,6 +33,47 @@ class Settings(BaseAppSettings):
 
 settings = Settings()
 ```
+
+::: details Step-by-step breakdown
+
+### Step 1: Import `BaseAppSettings`
+
+```python
+from astris.config import Settings as BaseAppSettings
+```
+
+Imports Astris's base configuration class. It inherits from Pydantic's `BaseSettings` and automatically locates and parses `.env` files in your project root.
+
+### Step 2: Create a `Settings` subclass
+
+```python
+class Settings(BaseAppSettings):
+    """Extend application settings with custom environment variables."""
+```
+
+Creates your application's custom configuration schema. By subclassing `BaseAppSettings`, your settings inherit built-in variables (like `APP_NAME`, `APP_KEY`, and `DATABASE_URL`).
+
+### Step 3: Add typed environment variables
+
+```python
+    stripe_api_key: str | None = None
+    redis_url: str = "redis://localhost:6379"
+    max_upload_size_mb: int = 25
+```
+
+* **`stripe_api_key`**: Declares an optional setting. If `STRIPE_API_KEY` is not set in `.env`, it defaults to `None`.
+* **`redis_url`**: Declares a required string setting with a sensible default value. If `REDIS_URL` is set in `.env`, that value is used instead.
+* **`max_upload_size_mb`**: Enforces automatic type casting. Because environment variables are always strings in the operating system, Pydantic converts strings like `"50"` into an integer `50`. If an invalid value like `"large"` is provided, the application fails fast on startup with a clear error message.
+
+### Step 4: Instantiate the `settings` singleton
+
+```python
+settings = Settings()
+```
+
+Environment variables are read, validated, and cached once at boot time. You can now import `settings` anywhere in your application.
+
+:::
 
 ## Built-In Framework Settings
 
@@ -77,6 +117,12 @@ api_key = settings.stripe_api_key
 db_url = settings.database_url
 is_debug = settings.app_debug
 ```
+
+### How to Use It
+
+1. **Import `settings` directly**: Import the instantiated singleton from `app.core.config`.
+2. **Access attributes with full autocompletion**: Your IDE provides autocomplete and type-checking for every field defined on your `Settings` model.
+3. **Environment precedence**: If a variable is exported in your system shell (e.g., in Docker or CI/CD), it takes precedence over the `.env` file.
 
 ## Next Steps
 
