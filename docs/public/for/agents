@@ -168,7 +168,7 @@ class BillingService:
 
 ## Orbit CLI Quick Reference
 Always run Orbit commands via `uv run orbit`:
-- `uv run orbit serve`: Start dev server (FastAPI + Vite concurrent).
+- `uv run orbit serve`: Start dev server (Astris + Vite concurrent).
 - `uv run orbit serve --prod`: Start production server on 0.0.0.0.
 - `uv run orbit make:module <name>`: Scaffold domain controller, service, and model.
 - `uv run orbit make:controller <name> [--module <mod>]`: Generate a controller.
