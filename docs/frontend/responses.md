@@ -57,6 +57,13 @@ return InertiaResponse(
 
 :::
 
+### Automatic Prop Serialization
+
+Astris automatically serializes complex Python objects passed into `props` using a top-level encoder:
+* **SQLModel & SQLAlchemy models**: Database rows and relationships serialize directly into JSON objects without manual dictionary conversions.
+* **Pydantic schemas & DTOs**: Serialized into nested dictionaries automatically.
+* **Date & Datetime fields**: Formatted automatically to standard ISO 8601 strings.
+
 ### Component Resolution Conventions
 * `"Dashboard"` resolves to `resources/js/Pages/Dashboard.vue`.
 * `"Articles/Index"` resolves to `resources/js/Pages/Articles/Index.vue`.

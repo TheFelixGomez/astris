@@ -108,6 +108,7 @@ app = Astris(
 * **`enable_csrf: bool`**: Enables or disables CSRF verification. Defaults to `True` (or the value of `ENABLE_CSRF` in `.env`).
 * **`csrf_exempt_paths: list[str]`**: Defines URL prefixes that should bypass CSRF checks (e.g. external payment webhooks like `/api/webhooks/stripe`).
 * **`cors_origins: list[str]`**: Specifies allowed domains for Cross-Origin Resource Sharing. Defaults to `["*"]` in local development.
+* **`docs_favicon_url: str | None`**: URL for the custom favicon displayed on Swagger `/docs` and ReDoc `/redoc` pages (defaults to `/favicon.ico`).
 
 :::
 

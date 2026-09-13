@@ -199,6 +199,38 @@ async def store(dto: ArticleCreate):
 
 :::
 
+## Inspecting Registered Routes (`has_route`)
+
+Astris provides a helper function `has_route` to verify whether a specific URL route path is currently registered in your application. This is especially useful for conditionally rendering navigation items (such as authentication buttons) or applying dynamic logic:
+
+```python
+from astris.http import Request
+from astris.inertia import InertiaResponse
+from astris.routing import Controller, has_route
+
+controller = Controller()
+
+
+@controller.get("/")
+async def welcome(request: Request) -> InertiaResponse:
+    # Check if authentication routes are available
+    has_auth = has_route(request, "/login")
+
+    return InertiaResponse(
+        request,
+        "Welcome",
+        props={"has_auth": has_auth},
+    )
+```
+
+::: details How `has_route` works
+
+* **Accepts either `Request` or `Astris` app instance**: You can pass the current incoming `request` or the application kernel `app`.
+* **Recursive traversal**: `has_route` automatically traverses all top-level routes as well as nested sub-routers mounted through domain modules.
+* **Exact path matching**: Returns `True` if a registered route matches the target path, or `False` otherwise.
+
+:::
+
 ## Scaffolding a Controller with Orbit
 
 Generate a new controller instantly with the Orbit CLI:
