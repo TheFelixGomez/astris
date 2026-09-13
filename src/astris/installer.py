@@ -304,6 +304,9 @@ controller = Controller(tags=["Home"])
 
 @controller.get("/")
 async def index(request: Request) -> InertiaResponse:
+    has_auth = any(
+        getattr(route, "path", None) == "/login" for route in request.app.routes
+    )
     return InertiaResponse(
         request,
         "Welcome",
@@ -311,9 +314,11 @@ async def index(request: Request) -> InertiaResponse:
             "status": "online",
             "message": "Welcome to your Astris application! 🚀",
             "version": "0.1.1",
+            "has_auth": has_auth,
             "api_docs_url": "/docs",
             "redoc_url": "/redoc",
             "docs_url": "https://astris.dev",
+            "github_url": "https://github.com/TheFelixGomez/astris",
         },
     )
 """
@@ -484,16 +489,20 @@ interface Props {
   status: string;
   message: string;
   version?: string;
+  has_auth?: boolean;
   api_docs_url?: string;
   redoc_url?: string;
   docs_url?: string;
+  github_url?: string;
 }
 
 withDefaults(defineProps<Props>(), {
-  version: "0.1.0",
+  version: "0.1.1",
+  has_auth: false,
   api_docs_url: "/docs",
   redoc_url: "/redoc",
-  docs_url: "https://github.com/TheFelixGomez/astris",
+  docs_url: "https://astris.dev",
+  github_url: "https://github.com/TheFelixGomez/astris",
 });
 
 const page = usePage();
@@ -512,27 +521,55 @@ const page = usePage();
       </div>
 
       <nav class="flex items-center gap-3">
-        <template v-if="page.props.auth?.user">
-          <Link
-            href="/dashboard"
-            class="px-4 py-2 rounded-xl text-sm font-medium text-sky-400 bg-sky-500/10 border border-sky-500/20 hover:bg-sky-500/20 hover:border-sky-500/40 transition duration-200"
-          >
-            Dashboard &rarr;
-          </Link>
+        <template v-if="has_auth">
+          <template v-if="page.props.auth?.user">
+            <Link
+              href="/dashboard"
+              class="px-4 py-2 rounded-xl text-sm font-medium text-sky-400 bg-sky-500/10 border border-sky-500/20 hover:bg-sky-500/20 hover:border-sky-500/40 transition duration-200"
+            >
+              Dashboard &rarr;
+            </Link>
+          </template>
+          <template v-else>
+            <Link
+              href="/login"
+              class="px-3.5 py-1.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white transition duration-200"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/register"
+              class="px-4 py-1.5 rounded-xl text-sm font-medium text-white bg-sky-500 hover:bg-sky-400 shadow-md shadow-sky-500/20 transition duration-200"
+            >
+              Register
+            </Link>
+          </template>
         </template>
         <template v-else>
-          <Link
-            href="/login"
+          <a
+            :href="docs_url"
+            target="_blank"
+            rel="noopener noreferrer"
             class="px-3.5 py-1.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white transition duration-200"
           >
-            Sign In
-          </Link>
-          <Link
-            href="/register"
+            Docs
+          </a>
+          <a
+            :href="github_url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-3.5 py-1.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white transition duration-200"
+          >
+            GitHub
+          </a>
+          <a
+            :href="api_docs_url"
+            target="_blank"
+            rel="noopener noreferrer"
             class="px-4 py-1.5 rounded-xl text-sm font-medium text-white bg-sky-500 hover:bg-sky-400 shadow-md shadow-sky-500/20 transition duration-200"
           >
-            Register
-          </Link>
+            API Docs
+          </a>
         </template>
       </nav>
     </header>
