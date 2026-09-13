@@ -18,7 +18,7 @@ In a standard SPA architecture:
 User clicks <Link href="/users">
              │
              ▼
-FastAPI Controller executes in Python
+Astris Controller executes in Python
              │
              ▼
 Returns InertiaResponse(request, "Users", props={"users": [...]})

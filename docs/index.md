@@ -19,7 +19,7 @@ hero:
 features:
   - icon: ⚡
     title: Lightning-Fast Core
-    details: Powered by FastAPI, Uvicorn, and Python 3.11+ async concurrency with automatic OpenAPI interactive documentation.
+    details: High-throughput ASGI execution (powered by FastAPI and Uvicorn) and Python 3.11+ async concurrency with automatic OpenAPI interactive documentation.
   - icon: 🧩
     title: Modern Monolith with Inertia.js
     details: Build rich, reactive Vue 3 SPAs directly from server-side controllers with zero client-side REST boilerplate.
