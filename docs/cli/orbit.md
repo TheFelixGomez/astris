@@ -90,6 +90,10 @@ Creates:
 * `app/modules/auth/auth_controller.py`
 * `app/modules/auth/auth_service.py`
 * `app/modules/auth/auth_model.py`
+* `app/modules/tasks/task_controller.py`
+* `app/modules/tasks/task_service.py`
+* `app/modules/tasks/task_model.py`
+* `database/migrations/versions/0001_initial_schema.py`
 * `resources/js/Components/AstrisLogo.vue`
 * `resources/js/Pages/Auth/Login.vue`
 * `resources/js/Pages/Auth/Register.vue`

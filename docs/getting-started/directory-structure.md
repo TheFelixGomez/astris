@@ -16,14 +16,20 @@ my_app/
 │       ├── welcome/               # Default welcome module
 │       │   ├── __init__.py
 │       │   └── welcome_controller.py
-│       └── auth/                  # Default full-stack auth starter module
+│       ├── auth/                  # Default full-stack auth starter module
+│       │   ├── __init__.py
+│       │   ├── auth_controller.py
+│       │   ├── auth_model.py
+│       │   └── auth_service.py
+│       └── tasks/                 # Example reactive CRUD module
 │           ├── __init__.py
-│           ├── auth_controller.py
-│           ├── auth_model.py
-│           └── auth_service.py
+│           ├── task_controller.py
+│           ├── task_model.py
+│           └── task_service.py
 ├── database/
 │   ├── migrations/                # Alembic schema versions
 │   │   ├── versions/
+│   │   │   └── 0001_initial_schema.py
 │   │   └── env.py
 │   └── app.db                     # SQLite database file (in local dev)
 ├── public/                        # Static web root (favicon, robots.txt, assets)
