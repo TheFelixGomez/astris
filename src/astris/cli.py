@@ -430,12 +430,13 @@ def make_auth(
     try:
         install_auth_starter(force=force)
         typer.secho(
-            "✓ Authentication scaffolding generated successfully!\n"
+            "✓ Authentication and starter kit scaffolding generated successfully!\n"
             "  - Backend:  app/modules/auth (controller, service, model)\n"
+            "  - Backend:  app/modules/tasks (controller, service, model)\n"
             "  - Frontend: resources/js/Pages/Auth (Login.vue, Register.vue)\n"
             "  - Frontend: resources/js/Pages/Dashboard.vue\n\n"
             "Next steps:\n"
-            '  1. Run: uv run orbit make:migration "create_users_table"\n'
+            '  1. Run: uv run orbit make:migration "create_auth_and_tasks_tables"\n'
             "  2. Run: uv run orbit migrate",
             fg=typer.colors.GREEN,
         )
