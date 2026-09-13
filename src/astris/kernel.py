@@ -102,16 +102,82 @@ class Astris:
 
         app_title = title or self.config.app_name
         app_debug = self.config.app_debug
-        self.app = FastAPI(title=app_title, debug=app_debug, **fastapi_kwargs)
+
+        self.docs_url = fastapi_kwargs.pop("docs_url", "/docs")
+        self.redoc_url = fastapi_kwargs.pop("redoc_url", "/redoc")
+        self.docs_favicon_url = fastapi_kwargs.pop("docs_favicon_url", "/favicon.ico")
+        self.swagger_ui_oauth2_redirect_url = fastapi_kwargs.pop(
+            "swagger_ui_oauth2_redirect_url", "/docs/oauth2-redirect"
+        )
+
+        self.app = FastAPI(
+            title=app_title,
+            debug=app_debug,
+            docs_url=None,
+            redoc_url=None,
+            swagger_ui_oauth2_redirect_url=self.swagger_ui_oauth2_redirect_url,
+            **fastapi_kwargs,
+        )
         self._boot()
 
     def _boot(self) -> None:
         self._configure_middleware()
         self._configure_exception_handlers()
         self._mount_static()
+        self._configure_docs()
         self._discover_modules()
         if self.auto_create_tables:
             db.create_all()
+
+    def _configure_docs(self) -> None:
+        """Register OpenAPI documentation routes with Astris branding and custom favicon."""
+        from fastapi.openapi.docs import (
+            get_redoc_html,
+            get_swagger_ui_html,
+            get_swagger_ui_oauth2_redirect_html,
+        )
+        from starlette.requests import Request
+        from starlette.responses import HTMLResponse
+
+        if self.docs_url:
+
+            @self.app.get(self.docs_url, include_in_schema=False)
+            async def swagger_ui_html(req: Request) -> HTMLResponse:
+                root_path = req.scope.get("root_path", "").rstrip("/")
+                openapi_url = root_path + (self.app.openapi_url or "")
+                oauth2_redirect_url = self.swagger_ui_oauth2_redirect_url
+                if oauth2_redirect_url:
+                    oauth2_redirect_url = root_path + oauth2_redirect_url
+                return get_swagger_ui_html(
+                    openapi_url=openapi_url,
+                    title=f"{self.app.title} - Swagger UI",
+                    oauth2_redirect_url=oauth2_redirect_url,
+                    init_oauth=self.app.swagger_ui_init_oauth,
+                    swagger_ui_parameters=self.app.swagger_ui_parameters,
+                    swagger_favicon_url=self.docs_favicon_url,
+                )
+
+            if self.swagger_ui_oauth2_redirect_url:
+
+                @self.app.get(
+                    self.swagger_ui_oauth2_redirect_url, include_in_schema=False
+                )
+                async def swagger_ui_redirect() -> HTMLResponse:
+                    return get_swagger_ui_oauth2_redirect_html()
+
+        if self.redoc_url:
+
+            @self.app.get(self.redoc_url, include_in_schema=False)
+            async def redoc_html(req: Request) -> HTMLResponse:
+                root_path = req.scope.get("root_path", "").rstrip("/")
+                openapi_url = root_path + (self.app.openapi_url or "")
+                return get_redoc_html(
+                    openapi_url=openapi_url,
+                    title=f"{self.app.title} - ReDoc",
+                    redoc_js_url="https://cdn.jsdelivr.net/npm/redoc@2/bundles/redoc.standalone.js",
+                    redoc_favicon_url=self.docs_favicon_url,
+                    with_google_fonts=True,
+                )
 
     def _configure_exception_handlers(self) -> None:
         """Register Inertia validation and HTTP exception handlers."""
