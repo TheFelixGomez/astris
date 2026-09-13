@@ -431,13 +431,15 @@ def make_auth(
         install_auth_starter(force=force)
         typer.secho(
             "✓ Authentication and starter kit scaffolding generated successfully!\n"
-            "  - Backend:  app/modules/auth (controller, service, model)\n"
-            "  - Backend:  app/modules/tasks (controller, service, model)\n"
-            "  - Frontend: resources/js/Pages/Auth (Login.vue, Register.vue)\n"
-            "  - Frontend: resources/js/Pages/Dashboard.vue\n\n"
-            "Next steps:\n"
-            '  1. Run: uv run orbit make:migration "create_auth_and_tasks_tables"\n'
-            "  2. Run: uv run orbit migrate",
+            "  - Backend:   app/modules/auth (controller, service, model)\n"
+            "  - Backend:   app/modules/tasks (controller, service, model)\n"
+            "  - Database:  database/migrations/versions/0001_initial_schema.py\n"
+            "  - Frontend:  resources/js/Pages/Auth (Login.vue, Register.vue)\n"
+            "  - Frontend:  resources/js/Pages/Dashboard.vue\n\n"
+            "To get started:\n"
+            "  uv run orbit serve\n\n"
+            "To run database migrations:\n"
+            "  uv run orbit migrate",
             fg=typer.colors.GREEN,
         )
     except FileExistsError as e:

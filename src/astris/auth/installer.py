@@ -385,6 +385,65 @@ async def delete(
     return RedirectResponse(url="/dashboard", status_code=303)
 """
 
+INITIAL_SCHEMA_MIGRATION_TEMPLATE = '''"""create initial auth and tasks tables
+
+Revision ID: 0001_initial_schema
+Revises:
+Create Date: 2026-09-13 00:00:00.000000
+
+"""
+from collections.abc import Sequence
+
+from alembic import op
+import sqlalchemy as sa
+import sqlmodel
+
+# revision identifiers, used by Alembic.
+revision: str = "0001_initial_schema"
+down_revision: str | Sequence[str] | None = None
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
+
+
+def upgrade() -> None:
+    op.create_table(
+        "user",
+        sa.Column("name", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("email", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column(
+            "hashed_password", sqlmodel.sql.sqltypes.AutoString(), nullable=False
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_index(op.f("ix_user_email"), "user", ["email"], unique=True)
+    op.create_index(op.f("ix_user_name"), "user", ["name"], unique=False)
+    op.create_table(
+        "task",
+        sa.Column(
+            "title", sqlmodel.sql.sqltypes.AutoString(length=255), nullable=False
+        ),
+        sa.Column("completed", sa.Boolean(), nullable=False),
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("user_id", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.DateTime(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["user_id"],
+            ["user.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_index(op.f("ix_task_user_id"), "task", ["user_id"], unique=False)
+
+
+def downgrade() -> None:
+    op.drop_index(op.f("ix_task_user_id"), table_name="task")
+    op.drop_table("task")
+    op.drop_index(op.f("ix_user_name"), table_name="user")
+    op.drop_index(op.f("ix_user_email"), table_name="user")
+    op.drop_table("user")
+'''
+
 ASTRIS_LOGO_VUE_TEMPLATE = """<template>
   <svg
     viewBox="0 0 792 792"
@@ -1140,8 +1199,12 @@ def install_auth_starter(base_path: Path | None = None, force: bool = False) -> 
 
     auth_module_dir = root / "app" / "modules" / "auth"
     tasks_module_dir = root / "app" / "modules" / "tasks"
+    migrations_versions_dir = root / "database" / "migrations" / "versions"
     auth_pages_dir = root / "resources" / "js" / "Pages" / "Auth"
     dashboard_file = root / "resources" / "js" / "Pages" / "Dashboard.vue"
+    initial_migration_file = (
+        migrations_versions_dir / "0001_initial_schema.py"
+    )
 
     target_files = [
         auth_module_dir / "auth_model.py",
@@ -1150,6 +1213,7 @@ def install_auth_starter(base_path: Path | None = None, force: bool = False) -> 
         tasks_module_dir / "task_model.py",
         tasks_module_dir / "task_service.py",
         tasks_module_dir / "task_controller.py",
+        initial_migration_file,
         auth_pages_dir / "Login.vue",
         auth_pages_dir / "Register.vue",
         dashboard_file,
@@ -1208,3 +1272,9 @@ def install_auth_starter(base_path: Path | None = None, force: bool = False) -> 
     pages_dir = root / "resources" / "js" / "Pages"
     pages_dir.mkdir(parents=True, exist_ok=True)
     dashboard_file.write_text(VUE_DASHBOARD_TEMPLATE, encoding="utf-8")
+
+    # 5. Database initial migration: database/migrations/versions/0001_initial_schema.py
+    migrations_versions_dir.mkdir(parents=True, exist_ok=True)
+    initial_migration_file.write_text(
+        INITIAL_SCHEMA_MIGRATION_TEMPLATE, encoding="utf-8"
+    )
