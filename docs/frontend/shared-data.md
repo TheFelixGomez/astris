@@ -18,9 +18,41 @@ share("auth", lambda request: {
 })
 ```
 
+::: details Step-by-step breakdown
+
+### Step 1: Import `share`
+
+```python
+from astris.inertia import share
+```
+
+Imports the global sharing registry function from Astris's Inertia module.
+
+### Step 2: Share static data
+
+```python
+share("app_name", "Astris Platform")
+```
+
+Registers a static prop named `"app_name"`. Every Inertia response rendered across your entire application will automatically include `props.app_name = "Astris Platform"`.
+
+### Step 3: Share dynamic callable data
+
+```python
+share("auth", lambda request: {
+    "user": getattr(request.state, "user", None)
+})
+```
+
+* By passing a function or `lambda` that accepts `request`, the prop is evaluated lazily at the moment each response is rendered.
+* `getattr(request.state, "user", None)` safely pulls the authenticated user attached by your authentication guards or session middleware.
+* If no user is logged in, it cleanly evaluates to `None` without crashing.
+
+:::
+
 ## Accessing Shared Props in Vue 3
 
-Inside any Vue 3 component or layout:
+Inside any Vue 3 component or layout, access shared data via Inertia's `usePage()` hook:
 
 ```vue
 <script setup lang="ts">
@@ -34,31 +66,54 @@ const appName = page.props.app_name
 </script>
 
 <template>
-  <nav>
-    <span>{{ appName }}</span>
+  <nav class="flex justify-between items-center p-4">
+    <span class="font-bold">{{ appName }}</span>
     <span v-if="user">Logged in as {{ user.name }}</span>
+    <span v-else>Guest</span>
   </nav>
 </template>
 ```
+
+::: details Vue 3 usage breakdown
+
+* **`import { usePage } from '@inertiajs/vue3'`**: Imports the page object containing current route metadata and all shared props.
+* **`const page = usePage()`**: Grants reactive access to the page context.
+* **`page.props.auth?.user`**: Accesses the shared `auth` object. Using optional chaining (`?.`) ensures your template renders smoothly when a visitor is logged out.
+
+:::
 
 ## Flash Messages (`flash()`)
 
 Flash messages are short notifications stored temporarily in session cookies and cleared immediately after being displayed.
 
-### Setting Flash Data in Python:
+### Setting Flash Data in Python
 
 ```python
-from astris.inertia import flash, InertiaResponse
+from astris.inertia import flash
 from astris.http import Request, RedirectResponse, status
 
 @controller.post("/settings")
 async def update_settings(request: Request) -> RedirectResponse:
-    # Perform update logic...
+    # 1. Perform update logic...
+
+    # 2. Flash a success notification
     flash(request, "success", "Profile updated successfully!")
+
+    # 3. Redirect back with 303 See Other
     return RedirectResponse(url="/settings", status_code=status.HTTP_303_SEE_OTHER)
 ```
 
-### Displaying Flash Messages in Vue 3:
+::: details Flash lifecycle breakdown
+
+1. **`flash(request, "success", "...")`**: Writes the message into `request.session["_flash"]`. The message is encrypted and signed inside the session cookie using your `APP_KEY`.
+2. **`RedirectResponse(..., status_code=status.HTTP_303_SEE_OTHER)`**: Redirects the browser to the destination URL.
+3. **Automatic Consumption**: During the subsequent `GET` request, Astris's `FlashMiddleware` extracts the message into `request.state.flash` and automatically deletes it from the session cookie so it is never displayed twice.
+
+:::
+
+### Displaying Flash Messages in Vue 3
+
+In your root layout or notification component:
 
 ```vue
 <script setup lang="ts">
@@ -68,7 +123,7 @@ const page = usePage()
 </script>
 
 <template>
-  <div>
+  <div class="space-y-3">
     <!-- Success Banner -->
     <div
       v-if="page.props.flash?.success"
@@ -87,6 +142,11 @@ const page = usePage()
   </div>
 </template>
 ```
+
+#### How the Template Reacts
+
+* **`page.props.flash?.success`**: Astris automatically shares all flash messages on the `flash` key of `$page.props`.
+* **Automatic Dismissal**: When the user clicks to navigate to another page, Inertia fetches the next page without flash data, causing the banner to disappear seamlessly.
 
 ## Next Steps
 

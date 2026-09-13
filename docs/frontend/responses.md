@@ -24,15 +24,47 @@ async def dashboard(request: Request) -> InertiaResponse:
     )
 ```
 
-Inertia maps `"Dashboard"` to the file located at:
-`resources/js/Pages/Dashboard.vue`
+::: details Step-by-step breakdown
 
-Nested components like `"Articles/Edit"` map to:
-`resources/js/Pages/Articles/Edit.vue`
+### Step 1: Import dependencies
+
+```python
+from astris.routing import Controller
+from astris.http import Request
+from astris.inertia import InertiaResponse
+```
+
+* `Controller`: Organizes route endpoints for your module.
+* `Request`: Provides access to session state, headers, and protocol metadata.
+* `InertiaResponse`: Renders an Inertia page view.
+
+### Step 2: Return an `InertiaResponse`
+
+```python
+return InertiaResponse(
+    request=request,
+    component="Dashboard",
+    props={
+        "user_name": "Jane Doe",
+        "stats": {"total_sales": 1540, "active_users": 89},
+    },
+)
+```
+
+* **`request=request`**: Crucial for Inertia protocol negotiation. The kernel inspects the incoming `X-Inertia` header. If present, it returns an Inertia JSON payload. If absent (e.g. initial browser page load), it renders the full HTML shell (`root.html`).
+* **`component="Dashboard"`**: The component name, resolved relative to `resources/js/Pages/`. This loads `resources/js/Pages/Dashboard.vue`.
+* **`props={...}`**: Dictionary of serializable data delivered to the Vue 3 component. Any Python dictionaries, lists, strings, numbers, or Pydantic/SQLModel models are automatically serialized.
+
+:::
+
+### Component Resolution Conventions
+* `"Dashboard"` resolves to `resources/js/Pages/Dashboard.vue`.
+* `"Articles/Index"` resolves to `resources/js/Pages/Articles/Index.vue`.
+* `"Settings/Billing/Invoices"` resolves to `resources/js/Pages/Settings/Billing/Invoices.vue`.
 
 ## Receiving Props in Vue 3
 
-Inside your Vue 3 SFC component, define your props using TypeScript:
+Inside your Vue 3 Single File Component (SFC), define and type your props using TypeScript and `<script setup>`:
 
 ```vue
 <script setup lang="ts">
@@ -55,9 +87,17 @@ const props = defineProps<Props>();
 </template>
 ```
 
+::: details Component breakdown
+
+* **`<script setup lang="ts">`**: The modern Vue 3 composition API syntax with TypeScript support.
+* **`interface Props { ... }`**: Defines compile-time type checking for the exact props passed from your Python controller.
+* **`const props = defineProps<Props>()`**: Registers the props with Vue's reactivity system. They are immediately available both in your `<script>` and `<template>`.
+
+:::
+
 ## The Root HTML Template (`resources/views/root.html`)
 
-On the initial visit (hard reload / direct URL entry), Astris renders `resources/views/root.html`:
+On the initial visit (hard reload or direct URL navigation in the browser address bar), Astris renders `resources/views/root.html`:
 
 ```html
 <!DOCTYPE html>
@@ -76,8 +116,15 @@ On the initial visit (hard reload / direct URL entry), Astris renders `resources
 </html>
 ```
 
-* `@inertia`: Mounts the `<div id="app" data-page="..."></div>` element.
-* `@vite`: Injects the Vite client and compiled bundle scripts (`resources/js/app.ts`).
+::: details Template directives breakdown
+
+* **`@inertia`**: Replaced by Astris with the root HTML mounting point:
+  ```html
+  <div id="app" data-page='{"component":"Dashboard","props":{...},"url":"/dashboard"}'></div>
+  ```
+* **`@vite`**: Injects Vite HMR client scripts in development (`http://localhost:5173/@vite/client` and `/resources/js/app.ts`), and preloaded production bundles with CSS stylesheets when built for production.
+
+:::
 
 ## Next Steps
 
