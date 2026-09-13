@@ -89,7 +89,7 @@ npm install
 uv run orbit serve
 ```
 
-Astris launches your FastAPI backend on `http://localhost:8000` and concurrently starts the Vite Hot Module Replacement (HMR) server for Vue 3 and Tailwind CSS.
+Astris launches your backend on `http://localhost:8000` and concurrently starts the Vite Hot Module Replacement (HMR) server for Vue 3 and Tailwind CSS.
 
 Open **`http://localhost:8000`** in your browser!
 
