@@ -449,6 +449,7 @@ ASTRIS_LOGO_VUE_TEMPLATE = """<template>
     viewBox="0 0 792 792"
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
+    class="pointer-events-none"
   >
     <path d="m50 757h88.8l37.8-92.3c-31.4-1.6-59-6.3-82.4-14.2z"/>
     <path d="m596.3 550.8q-11 6.5-22.3 12.6l79.1 193.6h88.9l-98.1-236.5q-22.4 15.6-47.6 30.3z"/>
