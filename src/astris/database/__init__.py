@@ -3,7 +3,9 @@ from sqlmodel import (
     Relationship,
     Session,
     SQLModel,
+    asc,
     col,
+    desc,
     select,
 )
 
@@ -21,8 +23,10 @@ __all__ = [
     "Relationship",
     "SQLModel",
     "Session",
+    "asc",
     "col",
     "db",
+    "desc",
     "get_session",
     "select",
 ]
