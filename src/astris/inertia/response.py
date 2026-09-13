@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import Request, Response
+from fastapi.encoders import jsonable_encoder
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.types import Receive, Scope, Send
 
@@ -48,10 +49,11 @@ class InertiaResponse(Response):
             "url": str(self.request.url.path),
             "version": "",
         }
+        encoded_page_data = jsonable_encoder(page_data)
 
         if is_inertia:
             response: Response = JSONResponse(
-                content=page_data,
+                content=encoded_page_data,
                 status_code=self.status_code,
                 headers={
                     "X-Inertia": "true",
@@ -72,13 +74,13 @@ class InertiaResponse(Response):
     <title>Astris App</title>
 </head>
 <body>
-    <div id="app" data-page="{html.escape(json.dumps(page_data))}"></div>
+    <div id="app" data-page="{html.escape(json.dumps(encoded_page_data))}"></div>
     {vite_tags}
 </body>
 </html>"""
             else:
                 raw_html = template_path.read_text(encoding="utf-8")
-                escaped_page = html.escape(json.dumps(page_data))
+                escaped_page = html.escape(json.dumps(encoded_page_data))
                 content = raw_html.replace(
                     "@inertia", f'<div id="app" data-page="{escaped_page}"></div>'
                 )
