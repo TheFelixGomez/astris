@@ -38,7 +38,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "alembic>=1.19.1",
+    "alembic>=1.20.0",
     "fastapi>=0.141.1",
     "itsdangerous>=2.2.0",
     "pwdlib[argon2]>=0.3.1",
