@@ -48,6 +48,10 @@ class Database:
         connect_args: dict[str, Any] = {}
         if self.url.startswith("sqlite"):
             connect_args["check_same_thread"] = False
+            if not self.url.startswith("sqlite:///:memory:"):
+                raw_path = self.url.removeprefix("sqlite:///").split("?")[0]
+                if raw_path:
+                    Path(raw_path).parent.mkdir(parents=True, exist_ok=True)
 
         kwargs = {**self._engine_kwargs}
         if connect_args:
