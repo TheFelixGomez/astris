@@ -109,12 +109,12 @@ def logout_user(request: Request) -> None:
     if hasattr(request.state, "user_id"):
         try:
             delattr(request.state, "user_id")
-        except AttributeError:
+        except (AttributeError, KeyError):
             pass
     if hasattr(request.state, "user"):
         try:
             delattr(request.state, "user")
-        except AttributeError:
+        except (AttributeError, KeyError):
             pass
 
 
