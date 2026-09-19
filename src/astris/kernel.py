@@ -75,7 +75,7 @@ class Astris:
         self.auto_create_tables = (
             auto_create_tables
             if auto_create_tables is not None
-            else self.config.auto_create_tables
+            else self.config.resolved_auto_create_tables
         )
         self.secret_key = secret_key or self.config.app_key
         if not self.secret_key:

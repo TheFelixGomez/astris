@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     # Database
     database_url: str = "sqlite:///database/app.db"
     db_echo: bool = False
-    auto_create_tables: bool = True
+    auto_create_tables: bool | None = None
 
     # Sessions & Security
     session_cookie_name: str = "astris_session"
@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     def is_production(self) -> bool:
         """Return True if running in production mode."""
         return self.app_env.lower() in ("production", "prod")
+
+    @property
+    def resolved_auto_create_tables(self) -> bool:
+        """Auto-enable table creation in development, disabled in production unless overridden."""
+        if self.auto_create_tables is not None:
+            return self.auto_create_tables
+        return not self.is_production
 
     @property
     def resolved_session_https_only(self) -> bool:
