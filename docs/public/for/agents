@@ -157,6 +157,10 @@ class BillingService:
 
 ### Models & Schema Migrations
 - Define database tables using SQLModel in `app/modules/<module>/<module>_model.py`.
+- In local development, Astris automatically creates tables on startup (`AUTO_CREATE_TABLES=true`). In production (`APP_ENV=production`), automatic table creation is disabled (`AUTO_CREATE_TABLES=false`).
+- For production databases, install the required database driver:
+  - PostgreSQL: `uv add psycopg2-binary`
+  - MySQL / MariaDB: `uv add pymysql`
 - When updating models, run:
   1. `uv run orbit make:migration "describe changes"`
   2. `uv run orbit migrate`
@@ -174,6 +178,7 @@ Always run Orbit commands via `uv run orbit`:
 - `uv run orbit make:controller <name> [--module <mod>]`: Generate a controller.
 - `uv run orbit make:model <name> [--module <mod>]`: Generate a SQLModel model.
 - `uv run orbit make:auth [--force]`: Install full-stack authentication starter kit.
+- `uv run orbit make:docker [--force] [--vercel]`: Generate production Dockerfile and .dockerignore (optionally Dockerfile.vercel).
 - `uv run orbit make:migration "<msg>"`: Generate an Alembic schema migration.
 - `uv run orbit migrate`: Run pending migrations.
 - `uv run orbit key:generate`: Generate a 32-byte secret key in `.env`.
@@ -184,3 +189,4 @@ Always run Orbit commands via `uv run orbit`:
 - Always configure through `.env` and `app/core/config.py`.
 - Never create raw database sessions in controllers; use `DatabaseSession` with `Depends()`.
 - Return `303 See Other` redirects after successful mutations.
+- In production (`APP_ENV=production`), always run migrations with `uv run orbit migrate` rather than relying on automatic table creation.
