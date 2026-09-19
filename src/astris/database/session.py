@@ -66,8 +66,8 @@ class Database:
             missing_module = err.name or "unknown"
             scheme = self.url.split("://")[0].split("+")[0].lower()
             install_hints = {
-                "postgresql": "uv add psycopg2-binary\n  or: uv add 'psycopg[binary]'",
-                "postgres": "uv add psycopg2-binary\n  or: uv add 'psycopg[binary]'",
+                "postgresql": "uv add psycopg2-binary",
+                "postgres": "uv add psycopg2-binary",
                 "mysql": "uv add pymysql",
                 "mariadb": "uv add pymysql",
                 "oracle": "uv add oracledb",
