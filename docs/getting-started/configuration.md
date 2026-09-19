@@ -87,6 +87,7 @@ The following settings are built into Astris and can be customized in `.env` or 
 | `APP_KEY` | `""` | 32-byte secret key used for cookie encryption and session signing |
 | `DATABASE_URL` | `"sqlite:///database/app.db"` | Database connection string (SQLite, PostgreSQL, MySQL) |
 | `DB_ECHO` | `False` | Prints raw SQL queries to console when True |
+| `AUTO_CREATE_TABLES` | `auto` | Auto-create tables on boot (`True` in local development, `False` when `APP_ENV=production`) |
 | `ENABLE_CSRF` | `True` | Enables automatic CSRF protection |
 | `SESSION_COOKIE_NAME` | `"astris_session"` | Name of the signed session cookie |
 | `SESSION_MAX_AGE` | `1209600` (14 days) | Session expiration time in seconds |

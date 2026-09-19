@@ -11,6 +11,7 @@
 | `orbit make:controller <name>` | Generate an Astris controller |
 | `orbit make:model <name>` | Generate a SQLModel database model |
 | `orbit make:auth` | Install full-stack authentication starter kit |
+| `orbit make:docker` | Generate production Dockerfile and .dockerignore |
 | `orbit migrate` | Run all pending database migrations |
 | `orbit make:migration "<msg>"` | Auto-generate a new Alembic schema migration |
 | `orbit key:generate` | Generate a new 32-byte secret `APP_KEY` in `.env` |
@@ -166,6 +167,26 @@ uv run orbit skills:update
 ::: tip Adding AI Skills to `.gitignore`
 Feel free to add `.agents/` and `.claude/` to your application's `.gitignore`, as these files are automatically regenerated whenever you run `uv run orbit skills:install` or `uv run orbit skills:update`.
 :::
+
+### 11. `orbit make:docker`
+Generates an optimized, multi-stage production `Dockerfile` and `.dockerignore`:
+
+```bash
+uv run orbit make:docker
+```
+
+Options:
+* `--force` (`-f`): Overwrite existing Docker configuration files.
+* `--vercel`: Also generate `Dockerfile.vercel` configured for container deployment on Vercel.
+
+```bash
+uv run orbit make:docker --vercel
+```
+
+Creates:
+* `Dockerfile`: Production multi-stage build using `node:24-alpine` (Vite assets) and `python:3.14-slim` (Astral `uv`, non-root user `astris`, dynamic `$PORT` support).
+* `.dockerignore`: Tailored ignore patterns for Python, Node, caches, and local secrets.
+* `Dockerfile.vercel` (when `--vercel` is provided).
 
 ## Next Steps
 
