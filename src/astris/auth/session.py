@@ -5,6 +5,8 @@ from fastapi.params import Depends as DependsClass
 from pwdlib import PasswordHash
 from pwdlib.exceptions import PwdlibError
 
+from astris.http import has_session
+
 # Modern Argon2id hasher (pwdlib 0.3.1 / OWASP standard)
 password_hash = PasswordHash.recommended()
 
@@ -30,16 +32,6 @@ def verify_and_update_password(
         return password_hash.verify_and_update(plain_password, hashed_password)
     except (ValueError, TypeError, PwdlibError):
         return False, None
-
-
-def _has_session(request: Request) -> bool:
-    scope = getattr(request, "scope", None)
-    if isinstance(scope, dict):
-        return "session" in scope
-    try:
-        return hasattr(request, "session")
-    except (AssertionError, AttributeError):
-        return False
 
 
 def login_user(
@@ -98,7 +90,7 @@ def login_user(
     if user_id is None:
         raise ValueError("Could not determine user_id from the provided user object.")
 
-    if not _has_session(request):
+    if not has_session(request):
         request.state.user_id = user_id
         if extracted_data:
             request.state.user = extracted_data
@@ -111,7 +103,7 @@ def login_user(
 
 def logout_user(request: Request) -> None:
     """Terminate the current authenticated session."""
-    if _has_session(request):
+    if has_session(request):
         request.session.pop("user_id", None)
         request.session.pop("user_data", None)
     if hasattr(request.state, "user_id"):
@@ -128,7 +120,7 @@ def logout_user(request: Request) -> None:
 
 def get_user_id(request: Request) -> int | str | None:
     """Retrieve the current authenticated user ID from the session or request state."""
-    if _has_session(request):
+    if has_session(request):
         uid = request.session.get("user_id")
         if uid is not None:
             return uid
@@ -143,7 +135,7 @@ def get_auth_user(request: Request) -> dict[str, Any] | None:
             return user
         if hasattr(user, "model_dump"):
             return user.model_dump()
-    if _has_session(request):
+    if has_session(request):
         user_data = request.session.get("user_data")
         if isinstance(user_data, dict):
             return user_data
