@@ -2,7 +2,7 @@ import importlib
 import inspect
 import pkgutil
 import sys
-from collections.abc import Callable, Coroutine, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Literal
 
@@ -20,6 +20,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
+from starlette.types import Receive, Scope, Send
 
 from astris.config import Settings, settings
 from astris.database import db
@@ -287,9 +288,9 @@ class Astris:
 
     async def __call__(
         self,
-        scope: Any,
-        receive: Callable[..., Coroutine[Any, Any, Any]],
-        send: Callable[..., Coroutine[Any, Any, None]],
+        scope: Scope,
+        receive: Receive,
+        send: Send,
     ) -> None:
         """ASGI 3 interface."""
         await self.app(scope, receive, send)
