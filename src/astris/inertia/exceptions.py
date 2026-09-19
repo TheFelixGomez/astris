@@ -7,6 +7,8 @@ from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
 from starlette.responses import JSONResponse, RedirectResponse, Response
 
+from astris.http import has_session
+
 
 def format_validation_errors(
     exc: RequestValidationError | ValidationError,
@@ -48,7 +50,7 @@ def create_inertia_validation_response(
     """
     referer = request.headers.get("Referer")
     if referer and request.method.upper() in ("POST", "PUT", "PATCH", "DELETE"):
-        if hasattr(request, "session"):
+        if has_session(request):
             request.session["_errors"] = errors
         response = RedirectResponse(url=referer, status_code=303)
         response.set_cookie(
