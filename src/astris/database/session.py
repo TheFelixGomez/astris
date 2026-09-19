@@ -60,7 +60,27 @@ class Database:
                 **kwargs.get("connect_args", {}),
             }
 
-        engine = create_engine(self.url, echo=self._echo, **kwargs)
+        try:
+            engine = create_engine(self.url, echo=self._echo, **kwargs)
+        except ModuleNotFoundError as err:
+            missing_module = err.name or "unknown"
+            scheme = self.url.split("://")[0].split("+")[0].lower()
+            install_hints = {
+                "postgresql": "uv add psycopg2-binary\n  or: uv add 'psycopg[binary]'",
+                "postgres": "uv add psycopg2-binary\n  or: uv add 'psycopg[binary]'",
+                "mysql": "uv add pymysql",
+                "mariadb": "uv add pymysql",
+                "oracle": "uv add oracledb",
+                "mssql": "uv add pymssql",
+            }
+            hint = install_hints.get(
+                scheme, f"uv add {missing_module}" if missing_module != "unknown" else "uv add <database-driver>"
+            )
+            raise RuntimeError(
+                f"Missing database driver '{missing_module}' for {scheme} database.\n"
+                f"To resolve, run:\n  {hint}"
+            ) from err
+
         self._engine = engine
         return engine
 
