@@ -47,7 +47,7 @@ def flash(
             target.state.flash_messages = {}
         target.state.flash_messages[category] = message
 
-        if hasattr(target, "session"):
+        if has_session(target):
             session_flashes = target.session.get("_flash", {})
             session_flashes[category] = message
             target.session["_flash"] = session_flashes
