@@ -14,7 +14,7 @@ export default defineConfig({
       { text: 'Orbit CLI', link: '/cli/orbit' },
       { text: 'PyPI', link: 'https://pypi.org/project/astris-python/' },
       {
-        text: 'v0.1.2',
+        text: 'v0.1.3',
         items: [
           { text: 'Release Notes', link: 'https://github.com/TheFelixGomez/astris/releases' },
           { text: 'Roadmap & Issues', link: 'https://github.com/TheFelixGomez/astris/issues' },
