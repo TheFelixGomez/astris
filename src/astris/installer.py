@@ -461,7 +461,7 @@ async def index(request: Request) -> InertiaResponse:
         props={
             "status": "online",
             "message": "Welcome to your Astris application! 🚀",
-            "version": "0.1.4",
+            "version": "0.1.5",
             "has_auth": has_route(request, "/login"),
             "api_docs_url": "/docs",
             "redoc_url": "/redoc",
@@ -646,7 +646,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  version: "0.1.4",
+  version: "0.1.5",
   has_auth: false,
   api_docs_url: "/docs",
   redoc_url: "/redoc",
