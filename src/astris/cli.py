@@ -485,3 +485,32 @@ def skills_update(
 ):
     """Update and re-sync all AI agent skills to match installed package versions."""
     skills_install(claude=claude)
+
+
+@orbit_cli.command("make:docker")
+def make_docker(
+    force: bool = typer.Option(
+        False, "--force", "-f", help="Overwrite existing Docker configuration files"
+    ),
+    vercel: bool = typer.Option(
+        False, "--vercel", help="Also generate Dockerfile.vercel for Vercel container deployment"
+    ),
+):
+    """Generate production Dockerfile and .dockerignore (use --vercel for Dockerfile.vercel)."""
+    from astris.installer import install_docker_scaffolding
+
+    try:
+        install_docker_scaffolding(force=force, vercel=vercel)
+        typer.secho(
+            "✓ Production Docker files generated successfully!",
+            fg=typer.colors.GREEN,
+            bold=True,
+        )
+        typer.echo("  - Dockerfile")
+        typer.echo("  - .dockerignore")
+        if vercel:
+            typer.echo("  - Dockerfile.vercel")
+    except FileExistsError as err:
+        typer.secho(f"Error: {err}", fg=typer.colors.RED)
+        raise typer.Exit(1) from err
+

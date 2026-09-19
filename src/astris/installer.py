@@ -22,6 +22,156 @@ installer_cli = typer.Typer(
 )
 
 
+DOCKERFILE_TEMPLATE = """# ==============================================================================
+# Stage 1: Build Frontend Assets (Node.js & Vite)
+# ==============================================================================
+FROM node:24-alpine AS frontend-builder
+
+WORKDIR /app
+
+# Install npm dependencies first for optimal Docker layer caching
+COPY package.json package-lock.json* ./
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+# Copy frontend source files, styles, and configurations
+COPY vite.config.* tsconfig.json* ./
+COPY resources/ ./resources/
+COPY public/ ./public/
+
+# Compile production bundles and manifest into public/build/
+RUN npm run build
+
+
+# ==============================================================================
+# Stage 2: Production Python Runtime
+# ==============================================================================
+FROM python:3.14-slim AS runner
+
+# Install Astral uv binary
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+# Set production environment variables
+ENV PYTHONUNBUFFERED=1 \\
+    PYTHONDONTWRITEBYTECODE=1 \\
+    UV_COMPILE_BYTECODE=1 \\
+    UV_LINK_MODE=copy \\
+    PATH="/app/.venv/bin:$PATH" \\
+    PORT=8000 \\
+    APP_ENV=production
+
+WORKDIR /app
+
+# Create a non-root system user and group for container security
+RUN groupadd -r astris && useradd -r -g astris -d /app -s /sbin/nologin astris
+
+# Install Python dependencies first to leverage Docker layer caching
+COPY pyproject.toml uv.lock* ./
+RUN uv sync --frozen --no-dev --no-install-project || uv sync --no-dev --no-install-project
+
+# Copy application source code, modules, and database configuration
+COPY app/ ./app/
+COPY database/ ./database/
+COPY main.py ./
+COPY README.md* ./
+
+# Copy Inertia root template required for server-side HTML rendering
+COPY resources/views/ ./resources/views/
+
+# Copy all public static assets and compiled Vite bundles from frontend builder
+COPY --from=frontend-builder /app/public ./public
+
+# Finalize uv sync to install the project package into the virtual environment
+RUN uv sync --frozen --no-dev || uv sync --no-dev
+
+# Ensure writable directory for database operations and non-root ownership
+RUN mkdir -p /app/database && chown -R astris:astris /app
+
+# Switch to non-root user
+USER astris
+
+# Expose default application port
+EXPOSE 8000
+
+# Launch production server with multi-worker support
+CMD ["sh", "-c", "exec orbit serve --prod --port ${PORT:-8000}"]
+"""
+
+DOCKERFILE_VERCEL_TEMPLATE = DOCKERFILE_TEMPLATE
+
+DOCKERIGNORE_TEMPLATE = """# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+env/
+venv/
+*.egg-info/
+dist/
+build/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Node / Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment & local secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+"""
+
+
+def install_docker_scaffolding(
+    base_path: Path | None = None,
+    force: bool = False,
+    vercel: bool = False,
+) -> None:
+    """Generate a production Dockerfile, optional Dockerfile.vercel, and .dockerignore for the project."""
+    target_dir = base_path or Path.cwd()
+    dockerfile_path = target_dir / "Dockerfile"
+    dockerignore_path = target_dir / ".dockerignore"
+
+    if not force:
+        has_existing = dockerfile_path.exists() or dockerignore_path.exists()
+        if vercel and (target_dir / "Dockerfile.vercel").exists():
+            has_existing = True
+        if has_existing:
+            raise FileExistsError(
+                "Docker configuration files already exist. Use --force to overwrite."
+            )
+
+    dockerfile_path.write_text(DOCKERFILE_TEMPLATE, encoding="utf-8")
+    dockerignore_path.write_text(DOCKERIGNORE_TEMPLATE, encoding="utf-8")
+    if vercel:
+        vercel_path = target_dir / "Dockerfile.vercel"
+        vercel_path.write_text(DOCKERFILE_VERCEL_TEMPLATE, encoding="utf-8")
+
+
+
 @installer_cli.callback()
 def callback():
     """Astris Framework Installer."""
@@ -252,6 +402,7 @@ uv run orbit skills:install --claude
         ".venv/\nnode_modules/\n__pycache__/\n*.pyc\n.env\npublic/build/\n",
         encoding="utf-8",
     )
+    install_docker_scaffolding(project_dir, force=True, vercel=False)
 
     # 3. main.py entry point
     main_content = """\"\"\"
