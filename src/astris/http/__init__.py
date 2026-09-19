@@ -10,6 +10,8 @@ from fastapi.responses import (
     StreamingResponse,
 )
 
+from astris.http.request import has_session
+
 __all__ = [
     "BackgroundTasks",
     "FileResponse",
@@ -21,5 +23,6 @@ __all__ = [
     "Request",
     "Response",
     "StreamingResponse",
+    "has_session",
     "status",
 ]
