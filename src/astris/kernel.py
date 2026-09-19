@@ -1,7 +1,9 @@
 import importlib
 import inspect
 import pkgutil
+import secrets
 import sys
+import warnings
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Literal
@@ -76,6 +78,15 @@ class Astris:
             else self.config.auto_create_tables
         )
         self.secret_key = secret_key or self.config.app_key
+        if not self.secret_key:
+            self.secret_key = secrets.token_hex(32)
+            warnings.warn(
+                "No secret key configured (APP_KEY is empty). "
+                "Generated an ephemeral fallback secret key for cookie sessions. "
+                "Set APP_KEY in your environment to persist sessions across server restarts.",
+                UserWarning,
+                stacklevel=2,
+            )
         self.session_cookie_name = (
             session_cookie_name or self.config.session_cookie_name
         )
