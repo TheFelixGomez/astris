@@ -363,7 +363,8 @@ async def toggle(
 ) -> RedirectResponse:
     task = TaskService.toggle(db, int(user_id), task_id)
     if not task:
-        raise HTTPException(status_code=404, detail="Task not found.")
+        flash(request, "error", "Task not found.")
+        return RedirectResponse(url="/dashboard", status_code=303)
 
     status_label = "completed" if task.completed else "reopened"
     flash(request, "success", f"Task marked as {status_label}!")
@@ -379,7 +380,8 @@ async def delete(
 ) -> RedirectResponse:
     success = TaskService.delete(db, int(user_id), task_id)
     if not success:
-        raise HTTPException(status_code=404, detail="Task not found.")
+        flash(request, "error", "Task not found.")
+        return RedirectResponse(url="/dashboard", status_code=303)
 
     flash(request, "info", "Task removed.")
     return RedirectResponse(url="/dashboard", status_code=303)
