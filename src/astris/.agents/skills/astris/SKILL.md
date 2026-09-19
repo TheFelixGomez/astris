@@ -19,6 +19,7 @@ Official Astris skill to write code with best practices, keeping up to date with
 * Flash messages: use `flash(request, "type", "message")`; see [Flash Messages & Shared Data](#flash-messages--shared-data).
 * Authentication: use `auth_required` / `guest_required` route dependencies and `AuthUser`; see [Authentication & Security](#authentication--security).
 * Orbit CLI: use `uv run orbit <command>`; see [Orbit CLI](#orbit-cli).
+* Docker & Deployment: scaffold containers via `uv run orbit make:docker`; see [Orbit CLI](#orbit-cli).
 
 ## Application Kernel
 
@@ -196,6 +197,10 @@ with db.session() as session:
     invoices = session.exec(select(Invoice)).all()
 ```
 
+### 3. Drivers & Production Migrations
+* **Drivers**: Astris connects to SQLite out of the box. For PostgreSQL, install `psycopg2-binary` (`uv add psycopg2-binary`). For MySQL/MariaDB, install `pymysql` (`uv add pymysql`).
+* **Table Creation & Migrations**: In local development, Astris automatically creates tables for all registered SQLModel models (`AUTO_CREATE_TABLES=true`). In production (`APP_ENV=production`), automatic table creation is disabled (`AUTO_CREATE_TABLES=false`). Always execute pending migrations via `uv run orbit migrate`.
+
 ## SQLModel Models
 
 Define models in `app/modules/<module>/<module>_model.py`. Astris auto-imports models to register table metadata with Alembic:
@@ -333,6 +338,7 @@ Always run Orbit commands via `uv run orbit`:
 * `uv run orbit migrate:rollback`: Roll back database migrations.
 * `uv run orbit migrate:status`: Check current migration revisions.
 * `uv run orbit key:generate`: Generate a 32-byte secret key and update `APP_KEY` in `.env`.
+* `uv run orbit make:docker [--force] [--vercel]`: Generate production `Dockerfile` and `.dockerignore` (optionally `Dockerfile.vercel`).
 
 ## Key Rules
 
@@ -340,3 +346,4 @@ Always run Orbit commands via `uv run orbit`:
 * Never hardcode secrets in code.
 * Always use `DatabaseSession` with `Depends()` in route handlers and services.
 * Always redirect with `status.HTTP_303_SEE_OTHER` after POST/PUT/PATCH/DELETE mutations.
+* In production (`APP_ENV=production`), always run migrations with `uv run orbit migrate` rather than relying on automatic table creation.
