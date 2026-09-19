@@ -26,16 +26,21 @@ class Controller(APIRouter):
 def has_route(target: Any, path: str) -> bool:
     """Check if a route path is registered in the application or request router tree."""
     app = getattr(target, "app", target)
-    routes = getattr(app, "routes", [])
-    for route in routes:
+    stack = list(getattr(app, "routes", []))
+
+    while stack:
+        route = stack.pop()
         if getattr(route, "path", None) == path:
             return True
-        for sub in getattr(getattr(route, "original_router", None), "routes", []):
-            if getattr(sub, "path", None) == path:
+        for cand in getattr(route, "_effective_candidates", []):
+            if getattr(cand, "path", None) == path:
                 return True
-        for sub in getattr(route, "routes", []):
-            if getattr(sub, "path", None) == path:
-                return True
+        orig = getattr(route, "original_router", None)
+        if orig and hasattr(orig, "routes"):
+            stack.extend(orig.routes)
+        if hasattr(route, "routes"):
+            stack.extend(route.routes)
+
     return False
 
 
