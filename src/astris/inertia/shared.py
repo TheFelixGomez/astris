@@ -9,6 +9,8 @@ from starlette.datastructures import MutableHeaders
 from starlette.responses import Response
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
+from astris.http import has_session
+
 # Global registry for shared prop factories
 _SHARED_PROPS: dict[str, Any] = {}
 
@@ -77,7 +79,7 @@ class FlashMiddleware:
         async def send_wrapper(message: Message) -> None:
             if message["type"] == "http.response.start":
                 flashes = getattr(request.state, "flash_messages", None)
-                if flashes and not hasattr(request, "session"):
+                if flashes and not has_session(request):
                     headers = MutableHeaders(scope=message)
                     cookie_val = quote(json.dumps(flashes))
                     cookie_str = (
@@ -92,7 +94,7 @@ class FlashMiddleware:
 async def resolve_shared_props(request: Request) -> dict[str, Any]:
     """Evaluate and resolve all global and request-scoped shared props."""
     user = getattr(request.state, "user", None)
-    if user is None and hasattr(request, "session"):
+    if user is None and has_session(request):
         user = request.session.get("user_data")
         if user is None and "user_id" in request.session:
             user = {"id": request.session.get("user_id")}
@@ -133,7 +135,7 @@ async def resolve_shared_props(request: Request) -> dict[str, Any]:
         flash_messages.update(state_flashes)
 
     # Check session if available
-    if hasattr(request, "session"):
+    if has_session(request):
         session_flashes = request.session.pop("_flash", None)
         if isinstance(session_flashes, dict):
             flash_messages.update(session_flashes)
@@ -152,7 +154,7 @@ async def resolve_shared_props(request: Request) -> dict[str, Any]:
 
     # 4. Resolve session / cookie flashed validation errors
     errors: dict[str, Any] = {}
-    if hasattr(request, "session"):
+    if has_session(request):
         session_errors = request.session.pop("_errors", None)
         if isinstance(session_errors, dict):
             errors.update(session_errors)
