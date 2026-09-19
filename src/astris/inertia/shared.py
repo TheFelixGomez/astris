@@ -16,7 +16,7 @@ _SHARED_PROPS: dict[str, Any] = {}
 
 
 def share(
-    key_or_dict: str | dict[str, Any] | Callable[[Request], dict[str, Any]],
+    key_or_dict: str | dict[str, Any] | Callable[..., Any],
     value: Any = None,
 ) -> None:
     """Register global shared props that will be injected into every Inertia response.
