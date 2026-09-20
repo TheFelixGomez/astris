@@ -35,3 +35,7 @@ Thumbs.db
 docs/.vitepress/dist
 docs/.vitepress/cache
 docs/node_modules
+
+AGENTS.md
+CLAUDE.md
+GEMINI.md
