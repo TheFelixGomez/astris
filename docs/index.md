@@ -17,15 +17,15 @@ hero:
       link: https://github.com/TheFelixGomez/astris
 
 features:
+  - icon: 🛡️
+    title: Robust & Production-Ready
+    details: Enterprise-grade signed cookie sessions, OWASP Argon2id password hashing, and 100% test coverage across the framework.
   - icon: ⚡
     title: Lightning-Fast Core
     details: High-throughput ASGI execution (powered by FastAPI and Uvicorn) and Python 3.11+ async concurrency with automatic OpenAPI interactive documentation.
   - icon: 🧩
     title: Modern Monolith with Inertia.js
     details: Build rich, reactive Vue 3 SPAs directly from server-side controllers with zero client-side REST boilerplate.
-  - icon: 🛡️
-    title: Production-Ready Auth
-    details: Cryptographically signed cookie sessions, OWASP-standard Argon2id password hashing, and complete starter kits out of the box.
   - icon: 🗄️
     title: SQLModel & Alembic Database
     details: Unified declarative models, Pydantic type safety, and automatic database migrations managed by Orbit CLI.
