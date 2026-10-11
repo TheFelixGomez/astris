@@ -76,5 +76,14 @@ dev = [
     "ty>=0.0.74",
 ]
 
+[tool.ruff]
+extend-exclude = ["docs"]
+
 [tool.ruff.lint.isort]
 combine-as-imports = true
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::starlette.exceptions.StarletteDeprecationWarning",
+    "ignore::ResourceWarning",
+]
