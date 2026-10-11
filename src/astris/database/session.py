@@ -74,7 +74,10 @@ class Database:
                 "mssql": "uv add pymssql",
             }
             hint = install_hints.get(
-                scheme, f"uv add {missing_module}" if missing_module != "unknown" else "uv add <database-driver>"
+                scheme,
+                f"uv add {missing_module}"
+                if missing_module != "unknown"
+                else "uv add <database-driver>",
             )
             raise RuntimeError(
                 f"Missing database driver '{missing_module}' for {scheme} database.\n"

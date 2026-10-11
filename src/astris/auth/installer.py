@@ -1205,9 +1205,7 @@ def install_auth_starter(base_path: Path | None = None, force: bool = False) -> 
     migrations_versions_dir = root / "database" / "migrations" / "versions"
     auth_pages_dir = root / "resources" / "js" / "Pages" / "Auth"
     dashboard_file = root / "resources" / "js" / "Pages" / "Dashboard.vue"
-    initial_migration_file = (
-        migrations_versions_dir / "0001_initial_schema.py"
-    )
+    initial_migration_file = migrations_versions_dir / "0001_initial_schema.py"
 
     target_files = [
         auth_module_dir / "auth_model.py",

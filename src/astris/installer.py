@@ -171,7 +171,6 @@ def install_docker_scaffolding(
         vercel_path.write_text(DOCKERFILE_VERCEL_TEMPLATE, encoding="utf-8")
 
 
-
 @installer_cli.callback()
 def callback():
     """Astris Framework Installer."""

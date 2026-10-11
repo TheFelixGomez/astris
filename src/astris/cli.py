@@ -33,7 +33,10 @@ def list_commands(ctx: typer.Context):
 @orbit_cli.command()
 def serve(
     host: str | None = typer.Option(
-        None, "--host", "-h", help="Bind socket to this host (defaults to 127.0.0.1 in dev, 0.0.0.0 in prod)"
+        None,
+        "--host",
+        "-h",
+        help="Bind socket to this host (defaults to 127.0.0.1 in dev, 0.0.0.0 in prod)",
     ),
     port: int = typer.Option(8000, "--port", "-p", help="Bind socket to this port"),
     reload: bool | None = typer.Option(
@@ -453,13 +456,17 @@ def make_auth(
 @orbit_cli.command("skills:install")
 def skills_install(
     claude: bool = typer.Option(
-        False, "--claude", help="Install skills for Claude Code in .claude/skills as well"
+        False,
+        "--claude",
+        help="Install skills for Claude Code in .claude/skills as well",
     ),
 ):
     """Install or regenerate AI agent skills for the project."""
     astris_skill = Path(__file__).parent / ".agents" / "skills" / "astris" / "SKILL.md"
     if not astris_skill.exists():
-        typer.secho("Error: Astris skill file not found in package.", fg=typer.colors.RED)
+        typer.secho(
+            "Error: Astris skill file not found in package.", fg=typer.colors.RED
+        )
         raise typer.Exit(1)
 
     skill_text = astris_skill.read_text(encoding="utf-8")
@@ -480,7 +487,9 @@ def skills_install(
 @orbit_cli.command("skills:update")
 def skills_update(
     claude: bool = typer.Option(
-        False, "--claude", help="Update skills for Claude Code in .claude/skills as well"
+        False,
+        "--claude",
+        help="Update skills for Claude Code in .claude/skills as well",
     ),
 ):
     """Update and re-sync all AI agent skills to match installed package versions."""
@@ -493,7 +502,9 @@ def make_docker(
         False, "--force", "-f", help="Overwrite existing Docker configuration files"
     ),
     vercel: bool = typer.Option(
-        False, "--vercel", help="Also generate Dockerfile.vercel for Vercel container deployment"
+        False,
+        "--vercel",
+        help="Also generate Dockerfile.vercel for Vercel container deployment",
     ),
 ):
     """Generate production Dockerfile and .dockerignore (use --vercel for Dockerfile.vercel)."""
@@ -513,4 +524,3 @@ def make_docker(
     except FileExistsError as err:
         typer.secho(f"Error: {err}", fg=typer.colors.RED)
         raise typer.Exit(1) from err
-
