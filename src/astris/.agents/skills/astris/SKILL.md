@@ -311,6 +311,7 @@ const submit = () => {
 
    controller = Controller(prefix="/dashboard", dependencies=[auth_required])
 
+
    @controller.get("/")
    async def dashboard(request: Request, user: AuthUser) -> InertiaResponse:
        return InertiaResponse(request, "Dashboard", props={"user": user})
