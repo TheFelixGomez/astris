@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>The modern full-stack web framework for Python.</strong><br>
-  Full-stack simplicity with modern Python performance.
+  Full-stack simplicity with modern Python performance, ready for production
 </p>
 
 <p align="center">
@@ -16,8 +16,6 @@
   <a href="https://codecov.io/gh/TheFelixGomez/astris"><img src="https://codecov.io/gh/TheFelixGomez/astris/branch/main/graph/badge.svg" alt="Coverage"></a>
   <a href="https://github.com/TheFelixGomez/astris/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
 </p>
-
-> ⚠️ **Early Alpha**: Astris is currently in active alpha development. APIs and features may undergo breaking changes until production-ready status is confirmed. Feedback, bug reports, and ideas are welcome!
 
 ---
 
@@ -33,6 +31,7 @@ By combining **FastAPI**, **Inertia.js**, **Vue 3**, **Tailwind CSS v4**, and **
 
 ## 🌟 Key Features
 
+* **🛡️ Robust & Production-Ready**: Enterprise-grade architecture with 100% test coverage across the framework.
 * **⚡ Lightning-Fast Core**: ASGI performance powered by FastAPI and Uvicorn with auto-generated OpenAPI & Swagger documentation.
 * **🧩 Modern Monolith with Inertia.js**: Render Vue 3 components directly from FastAPI controllers with full server-side state hydration and zero REST boilerplate.
 * **🛡️ Production-Ready Authentication**: Cryptographically signed cookie sessions, OWASP-standard **Argon2id** password hashing (`pwdlib`), and full-stack auth starter kit.
