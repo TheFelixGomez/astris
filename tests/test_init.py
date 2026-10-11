@@ -15,7 +15,7 @@ def test_top_level_init():
     for attr in expected_attrs:
         assert hasattr(astris, attr)
         assert attr in astris.__all__
-    assert astris.__version__ == "0.1.6"
+    assert astris.__version__ == "0.2.0"
 
 
 def test_http_init():
