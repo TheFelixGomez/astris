@@ -13,6 +13,7 @@
   <a href="https://astris.dev"><img src="https://img.shields.io/badge/docs-astris.dev-0ea5e9.svg" alt="Documentation"></a>
   <a href="https://pypi.org/project/astris-python/"><img src="https://img.shields.io/pypi/v/astris-python.svg" alt="PyPI version"></a>
   <a href="https://pypi.org/project/astris-python/"><img src="https://img.shields.io/pypi/pyversions/astris-python.svg" alt="Python Versions"></a>
+  <a href="https://codecov.io/gh/TheFelixGomez/astris"><img src="https://codecov.io/gh/TheFelixGomez/astris/branch/main/graph/badge.svg" alt="Coverage"></a>
   <a href="https://github.com/TheFelixGomez/astris/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
 </p>
 
