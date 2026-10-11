@@ -177,6 +177,32 @@ my_app/
 
 ---
 
+## 🚀 Deployment
+
+Astris applications scaffold with production Dockerfiles and standard ASGI architecture.
+
+### 1. Build & Migrate
+```bash
+# Compile frontend assets
+npm run build
+
+# Run database migrations
+uv run orbit migrate
+
+# Launch production ASGI server
+uv run orbit serve --prod
+```
+
+### 2. Docker Deployment
+```bash
+docker build -t my-astris-app .
+docker run -p 8000:8000 --env-file .env my-astris-app
+```
+
+📖 Read the full [Production & Docker Deployment Guide](https://astris.dev/deployment/production) on the documentation site.
+
+---
+
 ## 🙏 Acknowledgments
 
 Astris is built upon the work of giants. Huge gratitude to the incredible open-source projects and creators that make Astris possible:
